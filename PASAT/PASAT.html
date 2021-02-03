@@ -48,7 +48,7 @@ var openingScreen = {
 var sessionScreen =  {
   type: 'survey-text',
   questions: [
-    {prompt: "Je hoeveelste huiswerksessie is dit?", rows: 1, columns: 5},
+    {prompt: "Welk testmoment is dit? <br> Pre-ECT = 1, Post-ECT = 2, Post-CCT = 3", rows: 1, columns: 5},
     {prompt: "Wat is uw participanten nummer?", rows: 1, columns: 10}
   ],
   on_finish: function(data) {
@@ -67,7 +67,7 @@ var sessionScreen =  {
 var instructions = {
   type: 'instructions',
   pages: [
-    'Welkom! Tijdens deze taak zal je een reeks van cijfers horen die ongeveer om de 3 seconden gepresenteerd worden. De snelheid waarmee de cijfers gepresenteerd zullen worden, is afhankelijk van jouw prestatie. <br> Probeer zo accuraat mogelijk te werken! ' +
+    'Welkom! Tijdens deze taak zal je een reeks van cijfers horen die ongeveer om de 3 seconden gepresenteerd worden. <br> Probeer zo accuraat mogelijk te werken! ' +
     '<br> Jouw taak bestaat eruit te luisteren naar de eerste twee cijfers, deze samen te tellen en vervolgens op de som van deze twee cijfers te klikken. Als je het volgende cijfer hoort, tel dat dan op bij het cijfer dat daar juist voor gepresenteerd werd en klik op de nieuwe som. ' +
     '<br> Ga telkens verder door het volgende cijfer op te tellen bij het vorige. ' +
     '<br> Je hoeft geen totaalscore bij te houden, maar enkel de som van de laatste 2 cijfers.',
@@ -101,7 +101,7 @@ var practiceStats = [];
 var correctAnswers = [];
 var audioNumbers = [];
 
-var practiceDuration = 4000;
+var practiceDuration = 5000;
 var practiceFeedbackDuration = 1000;
 var practiceStrictness = 2; // Less than this many of correct for another practice round
 var trialDuration = 3000;
@@ -109,7 +109,7 @@ var maxDuration = 4000;
 var minDuration = 2000;
 var newTESTING = 10;
 
-var ITIs = [3000, 2000, 1500];
+var ITIs = [4000, 2000, 1500];
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
@@ -130,22 +130,22 @@ function shuffle(array) {
   return array;
 }
 
-var numberOfTrials = 60;
+var numberOfTrials = 60; // Per block
 var blockAmount = 3;
-var blockLength = numberOfTrials/blockAmount; // Change if blocks are not the same size
+var blockLength = numberOfTrials; //numberOfTrials/blockAmount; // Change if blocks are not the same size
 var numberOfStimuli = 9;
 // var numberOfIterations = 3;
 var numberOfIterations = Math.ceil(numberOfTrials/numberOfStimuli)
-var numberOfPractice = 16;
+var numberOfPractice = 10;
 
 for (i = 0; i <= numberOfStimuli -1; i++) {
   j = i+1;
   tempStimuli.push('https://ghepmk01.ugent.be/limesurvey/upload/projects/pasat/AttentionTraining/WAV/' + j + '.wav'); // for Pre-loading stimuli
   if(i==numberOfStimuli-1) {
     for (t = 0; t <= numberOfIterations-1; t++){
-      tempStimuli = shuffle(tempStimuli);
-      allStimuli = allStimuli.concat(tempStimuli);
-      if(Object.keys(allStimuli).length >= numberOfTrials){
+      tempStimuli = shuffle(tempStimuli); // shuffle trials
+      allStimuli = allStimuli.concat(tempStimuli); // add trials to full trial set
+      if(Object.keys(allStimuli).length >= numberOfTrials){ // this is always the case
         allStimuli = shuffle(allStimuli.slice(0, numberOfTrials)); // Remake it into 60 trials max And shuffle again.
         break;
       }
@@ -304,8 +304,7 @@ function makePracticeTrials(){
   }
 }
 
-
-makePracticeBlock();
+makePracticeBlock(); // Make it for real!
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // EXPERIMENTAL DESIGN
@@ -315,7 +314,7 @@ var audioTrialsTimeline = [];
 trialDuration = ITIs[0];
 blockNum = 0;
 upperLim = ((blockNum+1)*blockLength)-1;
-blockStimuli = allStimuli.slice(blockNum*blockLength, upperLim);
+blockStimuli = allStimuli.slice(blockNum*blockLength, upperLim); // Make variable of length Blocklength consisting of relevant trials for this block
 for (i = 0; i < blockLength-1; i++) {
   audioTrialsTimeline.push( {     //add it to design
     type: 'audio-button-response-mk',
@@ -398,7 +397,7 @@ for (i = 0; i < blockLength-1; i++) {
     // prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>',
     trial_duration: trialDuration,
     trial_ends_after_audio: false,
-    on_start: function(trial) {
+    on_start: function(trial) { // This function changes trialDuration for the remainder of the supposed length. e.g. if trials should last 3 seconds, and someone answers in 1 second, this changes trialDuration for the rest of this trial to 2 seconds.
       if (jsPsych.data.getLastTrialData().select('rt').values[0] > 0) {
         trial.trial_duration = ITIs[0] - jsPsych.data.getLastTrialData().select('rt').values[0];
         // console.log(trial.trial_duration)
@@ -705,13 +704,7 @@ for (i = 0; i < blockLength-1; i++) {
     },
   } )
 
-} // End of trial loop
-audioTrialsTimeline.push( {
-  type: 'html-keyboard-response',
-  stimulus: 'Dit is het einde van dit blok. Neem een korte pauze en druk op een toets om het volgende blok te starten.' +
-  '<br> De cijfers komen zometeen sneller achter elkaar.',
-  choices: jsPsych.ANY_KEYS,
-} )
+}) // End of trial loop)
 
 //////////////// PUSH IT ALL /////////////////
 
@@ -719,7 +712,7 @@ timeline.push(openingScreen);
 timeline.push(sessionScreen);
 timeline.push(instructions);
 
-// timeline = timeline.concat(practiceTimeline);
+timeline = timeline.concat(practiceTimeline);
 
 timeline = timeline.concat(audioTrialsTimeline);
 
@@ -777,7 +770,7 @@ jsPsych.init( {
     console.log(filenameID)
     console.log(interactionID)
     // console.log(jsPsych.data.get().csv()); // Show data in console
-    // jsPsych.data.get().localSave('csv','mydata.csv'); // Save CSV locally (misschien goed idee als backup bij de ECT studie?)
+    jsPsych.data.get().localSave('csv',filenameID); // Save CSV locally (misschien goed idee als backup bij de ECT studie?)
     saveData(filenameID,jsPsych.data.get().csv());       // Voeg bij naam nog participant ID enzo in, maar moet er een invoer voor bestaan voor het experiment
 
     // jsPsych.data.displayData('json');
