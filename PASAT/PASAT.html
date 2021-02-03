@@ -3,18 +3,18 @@ Next to DO: CSS opmaak fixen. -->
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/jspsych.js"></script>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-audio-button-response.js"></script>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-audio-button-response-mk.js"></script>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-html-button-response.js"></script>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-instructions.js"></script>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-survey-text.js"></script>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-fullscreen.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/jspsych.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-audio-button-response.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-audio-button-response-mk.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-html-button-response.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-html-keyboard-response.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-instructions.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-survey-text.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-fullscreen.js"></script>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-  <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/css/jspsych.css"></link>
+  <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/css/jspsych.css"></link>
   <!-- <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/css/aanvullend.css"></link> -->
   <!-- <link rel="stylesheet" href="C:\Users\mitch\OneDrive - UGent\UGent\Projects\1. Van de Velde et al\Experimental task\MVP-html\aanvullend.css"></link> -->
   <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey2/upload/surveys/929245/files/code/aanvullend.css"></link> // bevat button css
@@ -130,13 +130,12 @@ function shuffle(array) {
   return array;
 }
 
-var numberOfTrials = 60; // Per block
+var numberOfTrials = 183; // Per block (have to add +1 because first trial isnt added to anything)
 var blockAmount = 3;
-var blockLength = numberOfTrials; //numberOfTrials/blockAmount; // Change if blocks are not the same size
+var blockLength = numberOfTrials/blockAmount; // Change if blocks are not the same size
 var numberOfStimuli = 9;
-// var numberOfIterations = 3;
-var numberOfIterations = Math.ceil(numberOfTrials/numberOfStimuli)
-var numberOfPractice = 10;
+var numberOfIterations = Math.ceil(numberOfTrials/numberOfStimuli) // How often the max different amount of trials fit into number of trials per block
+var numberOfPractice = 11;
 
 for (i = 0; i <= numberOfStimuli -1; i++) {
   j = i+1;
@@ -191,6 +190,7 @@ function makePracticeTrials(){
       margin_horizontal: '2%',
       prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>',
       trial_duration: practiceDuration,
+      response_allowed_while_playing: false,
       // trial_duration: 1000000,
       response_ends_trial: true,
       on_load: function(data) {
@@ -266,11 +266,9 @@ function makePracticeTrials(){
       trial_ends_after_audio: false,
       on_start: function(trial) {
         if (jsPsych.data.getLastTrialData().select('rt').values[0] > 0) {
-          trial.trial_duration = trialDuration - jsPsych.data.getLastTrialData().select('rt').values[0];
-          // console.log(trial.trial_duration)
+          trial.trial_duration = practiceDuration - jsPsych.data.getLastTrialData().select('rt').values[0];
         } else {
           trial.trial_duration = 0;
-          // console.log(trial.trial_duration)
         }
       },
 
@@ -325,6 +323,7 @@ for (i = 0; i < blockLength-1; i++) {
     margin_horizontal: '2%',
     // prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>',
     trial_duration: trialDuration,
+    response_allowed_while_playing: false,
     response_ends_trial: true,
     on_load: function(data) {
       if (performanceStats.length) {
@@ -400,10 +399,8 @@ for (i = 0; i < blockLength-1; i++) {
     on_start: function(trial) { // This function changes trialDuration for the remainder of the supposed length. e.g. if trials should last 3 seconds, and someone answers in 1 second, this changes trialDuration for the rest of this trial to 2 seconds.
       if (jsPsych.data.getLastTrialData().select('rt').values[0] > 0) {
         trial.trial_duration = ITIs[0] - jsPsych.data.getLastTrialData().select('rt').values[0];
-        // console.log(trial.trial_duration)
       } else {
         trial.trial_duration = 0;
-        // console.log(trial.trial_duration)
       }
     },
 
@@ -460,6 +457,7 @@ for (i = 0; i < blockLength-1; i++) {
     margin_horizontal: '2%',
     // prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>',
     trial_duration: trialDuration,
+    response_allowed_while_playing: false,
     response_ends_trial: true,
     on_load: function(data) {
       if (performanceStats.length) {
@@ -535,10 +533,8 @@ for (i = 0; i < blockLength-1; i++) {
     on_start: function(trial) {
       if (jsPsych.data.getLastTrialData().select('rt').values[0] > 0) {
         trial.trial_duration = ITIs[1] - jsPsych.data.getLastTrialData().select('rt').values[0];
-        // console.log(trial.trial_duration)
       } else {
         trial.trial_duration = 0;
-        // console.log(trial.trial_duration)
       }
     },
 
@@ -594,6 +590,7 @@ for (i = 0; i < blockLength-1; i++) {
     margin_horizontal: '2%',
     // prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>',
     trial_duration: trialDuration,
+    response_allowed_while_playing: false,
     response_ends_trial: true,
     on_load: function(data) {
       if (performanceStats.length) {
@@ -669,10 +666,8 @@ for (i = 0; i < blockLength-1; i++) {
     on_start: function(trial) {
       if (jsPsych.data.getLastTrialData().select('rt').values[0] > 0) {
         trial.trial_duration = ITIs[2] - jsPsych.data.getLastTrialData().select('rt').values[0];
-        // console.log(trial.trial_duration)
       } else {
         trial.trial_duration = 0;
-        // console.log(trial.trial_duration)
       }
     },
 
@@ -704,7 +699,7 @@ for (i = 0; i < blockLength-1; i++) {
     },
   } )
 
-}) // End of trial loop)
+} // End of trial loop)
 
 //////////////// PUSH IT ALL /////////////////
 

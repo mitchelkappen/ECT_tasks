@@ -1,35 +1,36 @@
 /**
-* jspsych-audio-button-response-mk
-* Kristin Diep
-*
-* plugin for playing an audio file and getting a keyboard response
-*
-* documentation: docs.jspsych.org
-*
-**/
+ * jspsych-audio-button-response-mk
+ * Kristin Diep
+ *
+ * Edit by Mitchel Kappen (2021); visual block of 3x6 for buttons
+ * plugin for playing an audio file and getting a keyboard response
+ *
+ * documentation: docs.jspsych.org
+ *
+ **/
 
 jsPsych.plugins["audio-button-response-mk"] = (function() {
-  var plugin = {};
+	var plugin = {};
 
-  jsPsych.pluginAPI.registerPreload('audio-button-response-mk', 'stimulus', 'audio');
+	jsPsych.pluginAPI.registerPreload('audio-button-response-mk', 'stimulus', 'audio');
 
-  plugin.info = {
-    name: 'audio-button-response-mk',
-    description: '',
-    parameters: {
-      stimulus: {
-        type: jsPsych.plugins.parameterType.AUDIO,
+	plugin.info = {
+		name: 'audio-button-response-mk',
+		description: '',
+		parameters: {
+			stimulus: {
+				type: jsPsych.plugins.parameterType.AUDIO,
         pretty_name: 'Stimulus',
-        default: undefined,
-        description: 'The audio to be played.'
-      },
-      choices: {
-        type: jsPsych.plugins.parameterType.STRING,
+				default: undefined,
+				description: 'The audio to be played.'
+			},
+			choices: {
+				type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Choices',
-        default: undefined,
-        array: true,
-        description: 'The button labels.'
-      },
+				default: undefined,
+				array: true,
+				description: 'The button labels.'
+			},
       button_html: {
         type: jsPsych.plugins.parameterType.HTML_STRING,
         pretty_name: 'Button HTML',
@@ -73,6 +74,13 @@ jsPsych.plugins["audio-button-response-mk"] = (function() {
         default: false,
         description: 'If true, then the trial will end as soon as the audio file finishes playing.'
       },
+      response_allowed_while_playing: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        pretty_name: 'Response allowed while playing',
+        default: true,
+        description: 'If true, then responses are allowed while the audio is playing. '+
+          'If false, then the audio must finish playing before a response is accepted.'
+      }
     }
   }
 
@@ -87,45 +95,31 @@ jsPsych.plugins["audio-button-response-mk"] = (function() {
     } else {
       var audio = jsPsych.pluginAPI.getAudioBuffer(trial.stimulus);
       audio.currentTime = 0;
-      var audioDuration = audio.duration;
-    }
-
-    // Enable buttons when audio finishes
-    if(context !== null){
-      source.onended = function() {
-        end_trial();
-      }
-    } else {
-      var btns = document.querySelectorAll('.jspsych-audio-button-response-mk-button button');
-      for(var i=0; i<btns.length; i++){
-        btns[i].setAttribute('disabled', false);
-      }
-    }
-
-    var btns = document.querySelectorAll('.jspsych-audio-button-response-mk-button button');
-    for(var i=0; i<btns.length; i++){
-      //btns[i].removeEventListener('click');
-      btns[i].setAttribute('disabled', false);
-      console.log(i);
     }
 
     // set up end event if trial needs it
     if(trial.trial_ends_after_audio){
       if(context !== null){
-        source.onended = function() {
-          end_trial();
-        }
+        source.addEventListener('ended', end_trial);
       } else {
         audio.addEventListener('ended', end_trial);
       }
     }
 
-    //display buttons
+    // enable buttons after audio ends if necessary
+    if ((!trial.response_allowed_while_playing) & (!trial.trial_ends_after_audio)) {
+      if (context !== null) {
+        source.addEventListener('ended', enable_buttons);
+      } else {
+        audio.addEventListener('ended', enable_buttons);
+      }
+    }
+
+  	//display buttons
     var buttons = [];
     if (Array.isArray(trial.button_html)) {
       if (trial.button_html.length == trial.choices.length) {
         buttons = trial.button_html;
-        buttons.style.visibility = "hidden";
       } else {
         console.error('Error in image-button-response plugin. The length of the button_html array does not equal the length of the choices array');
       }
@@ -152,28 +146,21 @@ jsPsych.plugins["audio-button-response-mk"] = (function() {
     }
     html += '</div>';
 
+		//show prompt if there is one
+		if (trial.prompt !== null) {
+			html += trial.prompt;
+		}
 
-    //show prompt if there is one
-    if (trial.prompt !== null) {
-      html += trial.prompt;
-    }
+		display_element.innerHTML = html;
 
-    display_element.innerHTML = html;
-
-    // disable all the buttons during audio, enable after .wav finishes
-    var btns = document.querySelectorAll('.jspsych-audio-button-response-mk-button button');
-    for(var i=0; i<btns.length; i++){
-      btns[i].setAttribute('disabled', true);
-      setTimeout(function() {
-        enableButs();
-      }, (audioDuration*1000) - 400); // Enable buttons after length of audio file - 400 ms (to counter the end or if someone hears it quickly)
-    }
-
-    for (var i = 0; i < trial.choices.length; i++) {
+		for (var i = 0; i < trial.choices.length; i++) {
       display_element.querySelector('#jspsych-audio-button-response-mk-button-' + i).addEventListener('click', function(e){
         var choice = e.currentTarget.getAttribute('data-choice'); // don't use dataset for jsdom compatibility
         after_response(choice);
       });
+      if (!trial.response_allowed_while_playing) {
+        display_element.querySelector('#jspsych-audio-button-response-mk-button-' + i).querySelector('button').disabled = true;
+      }
     }
 
     // store response
@@ -186,36 +173,44 @@ jsPsych.plugins["audio-button-response-mk"] = (function() {
     function after_response(choice) {
 
       // measure rt
-      var end_time = performance.now();
-      var rt = end_time - start_time;
-      response.button = choice;
+      var endTime = performance.now();
+      var rt = endTime - startTime;
+      if(context !== null){
+				endTime = context.currentTime;
+				rt = Math.round((endTime - startTime) * 1000);
+			}
+      response.button = parseInt(choice);
       response.rt = rt;
 
       // disable all the buttons after a response
       var btns = document.querySelectorAll('.jspsych-audio-button-response-mk-button button');
       for(var i=0; i<btns.length; i++){
+        //btns[i].removeEventListener('click');
         btns[i].setAttribute('disabled', 'disabled');
       }
 
       if (trial.response_ends_trial) {
         end_trial();
       }
-    };
+    }
 
     // function to end trial when it is time
     function end_trial() {
-      // stop the audio file if it is playing
-      // remove end event listeners if they exist
-      if(context !== null){
-        // source.stop();       // Edited in this version to keep playing eventhough already answered.
-        // source.onended = function() { }
-      } else {
-        // audio.pause();
-        audio.removeEventListener('ended', end_trial);
-      }
 
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
+
+			// stop the audio file if it is playing
+			// remove end event listeners if they exist
+			if(context !== null){
+				source.stop();
+        source.removeEventListener('ended', end_trial);
+        source.removeEventListener('ended', enable_buttons);
+			} else {
+				audio.pause();
+        audio.removeEventListener('ended', end_trial);
+        audio.removeEventListener('ended', enable_buttons);
+			}
 
       // gather the data to store for the trial
       var trial_data = {
@@ -229,19 +224,20 @@ jsPsych.plugins["audio-button-response-mk"] = (function() {
 
       // move on to the next trial
       jsPsych.finishTrial(trial_data);
-    };
+    }
 
-    function enableButs() {
+    // function to enable buttons after audio ends
+    function enable_buttons() {
       var btns = document.querySelectorAll('.jspsych-audio-button-response-mk-button button');
-      for(var i=0; i<btns.length; i++){
+      for (var i=0; i<btns.length; i++) {
         btns[i].disabled = false;
       }
-    };
+    }
 
-    // start time
-    var start_time = performance.now();
+		// start time
+    var startTime = performance.now();
 
-    // start audio
+		// start audio
     if(context !== null){
       startTime = context.currentTime;
       source.start(startTime);
