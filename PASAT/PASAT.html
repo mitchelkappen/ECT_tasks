@@ -216,6 +216,8 @@ function makePracticeTrials(){
       },
 
       on_finish: function(data) {
+        data.ITI = practiceDuration;
+        data.block = 0;
         if (practiceStats.length) {
           var stimNumber = parseInt(data.stimulus[data.stimulus.length-5],10);
           if (stimNumber == 0) {
@@ -224,14 +226,15 @@ function makePracticeTrials(){
           audioNumbers.push(stimNumber);
           var tempVal = audioNumbers[audioNumbers.length-1] + audioNumbers[audioNumbers.length-2];
           correctAnswers.push(tempVal)
+          data.correct_answer_actual = tempVal;
           // data: {value: audioNumbers[audioNumbers.length-1], correct_answer: correctAnswers[correctAnswers.length-1]-1},
           data.value = audioNumbers[audioNumbers.length-1];
-          data.correct_answer= correctAnswers[correctAnswers.length-1]-1;
+          data.correct_answer = correctAnswers[correctAnswers.length-1]-1;
         } else {
           // If first trial
           audioNumbers.push(parseInt(data.stimulus[data.stimulus.length-5],10));
           data.value = audioNumbers[audioNumbers.length-1];
-          data.correct_answer= audioNumbers[audioNumbers.length-1]-1;
+          data.correct_answer= audioNumbers[audioNumbers.length-1];
         }
 
         if(data.button_pressed == data.correct_answer.toString()){
@@ -349,6 +352,8 @@ for (i = 0; i < blockLength-1; i++) {
     },
 
     on_finish: function(data) {
+      data.ITI = ITIs[0];
+      data.block = 1;
       if (performanceStats.length) {
         var stimNumber = parseInt(data.stimulus[data.stimulus.length-5],10);
         if (stimNumber == 0) {
@@ -357,14 +362,15 @@ for (i = 0; i < blockLength-1; i++) {
         audioNumbers.push(stimNumber);
         var tempVal = audioNumbers[audioNumbers.length-1] + audioNumbers[audioNumbers.length-2];
         correctAnswers.push(tempVal)
+        data.correct_answer_actual = tempVal;
         // data: {value: audioNumbers[audioNumbers.length-1], correct_answer: correctAnswers[correctAnswers.length-1]-1},
         data.value = audioNumbers[audioNumbers.length-1];
-        data.correct_answer= correctAnswers[correctAnswers.length-1]-1;
+        data.correct_answer = correctAnswers[correctAnswers.length-1]-1;
       } else {
         // If first trial
         audioNumbers.push(parseInt(data.stimulus[data.stimulus.length-5],10));
         data.value = audioNumbers[audioNumbers.length-1];
-        data.correct_answer= audioNumbers[audioNumbers.length-1]-1;
+        data.correct_answer= audioNumbers[audioNumbers.length-1];
       }
 
       if(data.button_pressed == data.correct_answer.toString()){
@@ -483,6 +489,8 @@ for (i = 0; i < blockLength-1; i++) {
     },
 
     on_finish: function(data) {
+      data.ITI = ITIs[1];
+      data.block = 2;
       if (performanceStats.length) {
         var stimNumber = parseInt(data.stimulus[data.stimulus.length-5],10);
         if (stimNumber == 0) {
@@ -491,14 +499,15 @@ for (i = 0; i < blockLength-1; i++) {
         audioNumbers.push(stimNumber);
         var tempVal = audioNumbers[audioNumbers.length-1] + audioNumbers[audioNumbers.length-2];
         correctAnswers.push(tempVal)
+        data.correct_answer_actual = tempVal;
         // data: {value: audioNumbers[audioNumbers.length-1], correct_answer: correctAnswers[correctAnswers.length-1]-1},
         data.value = audioNumbers[audioNumbers.length-1];
-        data.correct_answer= correctAnswers[correctAnswers.length-1]-1;
+        data.correct_answer = correctAnswers[correctAnswers.length-1]-1;
       } else {
         // If first trial
         audioNumbers.push(parseInt(data.stimulus[data.stimulus.length-5],10));
         data.value = audioNumbers[audioNumbers.length-1];
-        data.correct_answer= audioNumbers[audioNumbers.length-1]-1;
+        data.correct_answer= audioNumbers[audioNumbers.length-1];
       }
 
       if(data.button_pressed == data.correct_answer.toString()){
@@ -616,6 +625,8 @@ for (i = 0; i < blockLength-1; i++) {
     },
 
     on_finish: function(data) {
+      data.ITI = ITIs[2];
+      data.block = 3;
       if (performanceStats.length) {
         var stimNumber = parseInt(data.stimulus[data.stimulus.length-5],10);
         if (stimNumber == 0) {
@@ -624,14 +635,15 @@ for (i = 0; i < blockLength-1; i++) {
         audioNumbers.push(stimNumber);
         var tempVal = audioNumbers[audioNumbers.length-1] + audioNumbers[audioNumbers.length-2];
         correctAnswers.push(tempVal)
+        data.correct_answer_actual = tempVal;
         // data: {value: audioNumbers[audioNumbers.length-1], correct_answer: correctAnswers[correctAnswers.length-1]-1},
         data.value = audioNumbers[audioNumbers.length-1];
-        data.correct_answer= correctAnswers[correctAnswers.length-1]-1;
+        data.correct_answer = correctAnswers[correctAnswers.length-1]-1;
       } else {
         // If first trial
         audioNumbers.push(parseInt(data.stimulus[data.stimulus.length-5],10));
         data.value = audioNumbers[audioNumbers.length-1];
-        data.correct_answer= audioNumbers[audioNumbers.length-1]-1;
+        data.correct_answer= audioNumbers[audioNumbers.length-1];
       }
 
       if(data.button_pressed == data.correct_answer.toString()){
@@ -759,7 +771,7 @@ jsPsych.init( {
   // default_iti: 1000,
   use_webaudio: false,
   on_finish: function() {
-    var filenameID  = "data_"+ jsPsych.data.get().select('subject').values[0] + "_" + jsPsych.data.get().select('session').values[0] + "_"+Datum; // Filename
+    var filenameID  = "data_PASAT_ID_"+ jsPsych.data.get().select('subject').values[0] + "_Sesh_" + jsPsych.data.get().select('session').values[0] + "_Date_"+Datum; // Filename
     var interactionID  = "interactionData/interactData_"+ jsPsych.data.get().select('subject').values[0] +"_"+ jsPsych.data.get().select('session').values[0] +"_"+Datum; // Filename
 
     console.log(filenameID)
