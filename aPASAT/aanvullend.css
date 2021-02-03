@@ -1,0 +1,49 @@
+.myButton {
+	box-shadow:inset 0px -3px 7px 0px #29bbff;
+	background:linear-gradient(to bottom, #2dabf9 5%, #0688fa 100%);
+	background-color:#2dabf9;
+	border-radius:5px; //  button roundness
+	border:1px solid #0b0e07;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	height: 100px;
+	width: 100px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #263666;
+}
+.myButton:hover {
+	background:linear-gradient(to bottom, #0688fa 5%, #2dabf9 100%);
+	background-color:#0688fa;
+}
+
+.outerBlock{
+	display: grid;
+	grid-gap: 10px;
+}
+
+/* NEW SHIT -- Need to make this for this code only, else radio buttons will not work anymore*/
+
+/* HIDE RADIO */
+[type=radio] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* IMAGE STYLES */
+[type=radio] + img {
+  cursor: pointer;
+	opacity: 0.7;
+}
+
+/* CHECKED STYLES */
+[type=radio]:checked + img {
+  /* outline: 2px solid  #605555; */
+	box-shadow: 0 -1px 0 #605555,
+							0 1px 0 #605555;
+	opacity: 1;
+}

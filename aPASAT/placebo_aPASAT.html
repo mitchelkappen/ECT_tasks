@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/jspsych.js"></script>
+    <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-audio-button-response.js"></script>
+    <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-html-button-response.js"></script>
+    <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-instructions.js"></script>
+    <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-survey-text.js"></script>
+    <script src="C:\Users\mitch\OneDrive - UGent\UGent\Topics\LimeSurvey\jspsych-6.1.0\plugins\jspsych-audio-button-response-elaborated.js"></script>
+    <script src="C:\Users\mitch\OneDrive - UGent\UGent\Topics\LimeSurvey\jspsych-6.1.0\plugins\jspsych-audio-button-response-poging2.js"></script>
+
+    <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/css/jspsych.css"></link>
+    <!-- <link rel="stylesheet" href="C:\Users\mitch\OneDrive - UGent\UGent\Topics\LimeSurvey\jspsych-6.1.0\css\aanvullend.css"></link> // bevat button css -->
+
+    <style>
+
+</style>
+  </head>
+  <body></body>
+  <script>
+
+  ////////////// SCRIPT START /////////////////
+
+  var timeline = [];
+
+    timeline.push({
+      type: 'html-button-response',
+      stimulus: 'Recent versions of Chrome require the user to interact with a page before it can play audio. '+
+      'Clicking the button below counts as an interaction. Be aware of this when planning audio experiments if '+
+      'you want the first trial to include audio.',
+      choices: ['Continue']
+    });
+
+  // Actual part
+  var allStimuli = [];
+  var audioTrialsTimeline = [];
+  var i;
+  var feedbackWord = [];
+  var performanceStats = []; // Variable containing 1's and 0's for every trial (correct vs incorrect answers)
+  var correctCount = []; // variable that gets bigger (push) every time a correct answer is given. Reset when wrong answer is given.
+  var wrongCount = []; // variable that gets bigger (push) every time a wrong answer is given. Reset when correct answer is given.
+
+  var practiceDuration = 3500;
+  var trialDuration = 3000;
+  var maxDuration = 4000;
+  var minDuration = 2000;
+
+  for (i = 0; i <= 6; i++) {
+    console.log(i);
+    j = i+1;
+      allStimuli.push('https://ghepmk01.ugent.be/limesurvey/upload/projects/pasat/AttentionTraining/' + j + '.wav'); // for Pre-loading stimuli
+
+    //add it to design
+      audioTrialsTimeline.push({
+      type: 'audio-button-response',
+      stimulus: allStimuli[i],
+      choices: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18'],
+      // prompt: "<p>What word was said?</p>", // Hier invoegen voor de streak etc? jsPsych.data.get en dan averagen ofzo idk
+      button_html: '<button class="myButton">%choice%</button>',
+      // button_html: '<button class="myButton">%choice%</button>',
+      data: {value: j, correct_answer: i},
+      margin_vertical: '2%',
+      margin_horizontal: '3%',
+      prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>',
+      // trial_duration: trialDuration,
+      on_load: function(data) {
+        if (performanceStats.length) {
+
+        if(performanceStats[performanceStats.length-1] == 1){
+          var lastResponse = "Correct";
+        } else {
+          var lastResponse = "Incorrect"
+        };
+        } else {
+          var lastResponse = " ";
+        };
+
+        if(correctCount.length < 1) {
+          correctCounter = 0;
+        }
+        if(wrongCount.length < 1) {
+          wrongCounter = 0;
+        }
+
+      // if(correctCount.length > 0) {
+      //   correctCounter = correctCount.length;
+      //   if(correctCounter == 5) {
+      //     trialDuration = trialDuration - 100;
+      //   }
+      // } else {
+      //   correctCounter = 0;
+      // }
+      //
+      // if(wrongCount.length > 0) {
+      //   wrongCounter = wrongCount.length;
+      //   if(wrongCounter == 5) {
+      //     trialDuration = trialDuration + 100;
+      //   }
+      // } else {
+      //   wrongCounter = 0;
+      // }
+
+        document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: ' + lastResponse + '<br>Aantal correct op een rij: ' + correctCounter + '<br>Aantal fout op een rij: ' + wrongCounter + '<br>Snelheid: ' + trialDuration + ' ms';
+      },
+      on_finish: function(data) {
+      if(data.button_pressed == data.correct_answer.toString(36)){
+        data.correct = true;
+        var feedbackWord = 'Correct';
+        performanceStats.push(1);
+        wrongCount = [];
+        correctCount.push(1);
+      } else {
+        data.correct = false;
+        var feedbackWord = 'Incorrect';
+        performanceStats.push(0);
+        correctCount = [];
+        wrongCount.push(1);
+      }
+      return feedbackWord;
+    }
+    } )
+
+    /////// ITI but with showing of choice options and feedback
+    audioTrialsTimeline.push( {
+    type: 'audio-button-response',
+    stimulus: 'https://ghepmk01.ugent.be/limesurvey/upload/projects/pasat/AttentionTraining/silent.wav',
+    choices: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18'],
+    // prompt: "<p>What word was said?</p>", // Hier invoegen voor de streak etc? jsPsych.data.get en dan averagen ofzo idk
+    button_html: '<button class="myButton" disabled>%choice%</button>',
+    // button_html: '<button class="myButton">%choice%</button>',
+    data: {value: j, correct_answer: i},
+    margin_vertical: '2%',
+    margin_horizontal: '3%',
+    prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>',
+    trial_duration: trialDuration,
+    trial_ends_after_audio: true,
+    on_load: function(data) {
+      if(performanceStats[performanceStats.length-1] == 1){
+        var lastResponse = "Correct";
+      } else {
+        var lastResponse = "Incorrect"
+      };
+
+      if(correctCount.length > 0) {
+        correctCounter = correctCount.length;
+        if(correctCounter == 5) {
+          trialDuration = trialDuration - 100;
+        }
+      } else {
+        correctCounter = 0;
+      }
+
+      if(wrongCount.length > 0) {
+        wrongCounter = wrongCount.length;
+        if(wrongCounter == 5) {
+          trialDuration = trialDuration + 100;
+        }
+      } else {
+        wrongCounter = 0;
+      }
+      document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: ' + lastResponse + '<br>Aantal correct op een rij: ' + correctCounter + '<br>Aantal fout op een rij: ' + wrongCounter + '<br>Snelheid: ' + trialDuration + ' ms';
+    },
+  } )
+
+
+//////////////// This is the feedback between trials feedbackBlock
+
+    // audioTrialsTimeline.push({
+    //   type: 'html-keyboard-response',
+    //   choices: jsPsych.NO_KEYS,
+    //   trial_duration: 400,
+    //   data: {test_part: 'feedback'},
+    //   stimulus: function(){
+    //     var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
+    //     if(last_trial_correct){
+    //       return "<p>Correct!</p>";
+    //     } else {
+    //       return "<p>Wrong.</p>"
+    //     }
+    //   }
+    //   });
+
+/////////////////////
+
+}
+
+//////////////// PUSH IT ALL /////////////////
+
+    timeline = timeline.concat(audioTrialsTimeline);
+
+  jsPsych.init({
+    timeline: timeline,
+    preload_audio: allStimuli,
+    // default_iti: 1000,
+    use_webaudio: false,
+    on_finish: function(){jsPsych.data.displayData();}
+  });
+
+  </script>
+</html>
