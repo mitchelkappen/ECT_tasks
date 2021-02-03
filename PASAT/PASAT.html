@@ -29,7 +29,7 @@ Next to DO: CSS opmaak fixen. -->
 ////////////// SCRIPT START /////////////////
 
 var timeline = [];
-var debugging = 1;
+var debugging = 0;
 
 if (debugging == 0){
   timeline.push({
@@ -772,7 +772,7 @@ jsPsych.init( {
   use_webaudio: false,
   on_finish: function() {
     var filenameID  = "data_PASAT_ID_"+ jsPsych.data.get().select('subject').values[0] + "_Sesh_" + jsPsych.data.get().select('session').values[0] + "_Date_"+Datum; // Filename
-    var interactionID  = "interactionData/interactData_"+ jsPsych.data.get().select('subject').values[0] +"_"+ jsPsych.data.get().select('session').values[0] +"_"+Datum; // Filename
+    var interactionID  = "interactionData/interactData_PASAT_ID_"+ jsPsych.data.get().select('subject').values[0] +"_Sesh_"+ jsPsych.data.get().select('session').values[0] +"_Date_"+Datum; // Filename
 
     console.log(filenameID)
     console.log(interactionID)
@@ -785,8 +785,10 @@ jsPsych.init( {
     saveData(interactionID, interactionData.csv());
   },
   on_close: function() {
-    var filenameID  = "data_"+ jsPsych.data.get().select('subject').values[0] + "_" + jsPsych.data.get().select('session').values[0] + "_"+Datum; // Filename
-    saveData(filenameID,jsPsych.data.get().csv());       // Voeg bij naam nog participant ID enzo in, maar moet er een invoer voor bestaan voor het experiment
+    var filenameID  = "data_incomplete_PASAT_ID_"+ jsPsych.data.get().select('subject').values[0] + "_Sesh_" + jsPsych.data.get().select('session').values[0] + "_Date_"+Datum; // Filename
+    saveData(filenameID,jsPsych.data.get().csv());
+    var interactionID  = "interactionData/interactData_PASAT_ID_"+ jsPsych.data.get().select('subject').values[0] +"_Sesh_"+ jsPsych.data.get().select('session').values[0] +"_Date_"+Datum; // Filename
+
     var interactionData = jsPsych.data.getInteractionData();
     saveData(interactionID, interactionData.csv());
   }
