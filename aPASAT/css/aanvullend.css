@@ -3,7 +3,7 @@
 	background:linear-gradient(to bottom, #2dabf9 5%, #0688fa 100%);
 	background-color:#2dabf9;
 	/* background-color:#000000; */
-	border-radius:5px; //  button roundness
+	border-radius:0px; //  button roundness
 	border:1px solid #0b0e07;
 	display:inline-block;
 	/* display: table-cell;
@@ -34,7 +34,7 @@
 
 .outerBlock{
 	display: grid;
-	grid-gap: 10px;
+	grid-gap: 2px; /* Used to be 10px, but from3-4 onwards created the Herman grid illusion */
 }
 
 /* NEW SHIT -- Need to make this for this code only, else radio buttons will not work anymore*/
