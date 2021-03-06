@@ -3,18 +3,18 @@ Next to DO: CSS opmaak fixen. -->
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/jspsych.js"></script>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-audio-button-response.js"></script>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-audio-button-response-mk.js"></script>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-html-button-response.js"></script>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-instructions.js"></script>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-survey-text.js"></script>
-  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-fullscreen.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/jspsych.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-audio-button-response.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-audio-button-response-mk.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-html-button-response.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-html-keyboard-response.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-instructions.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-survey-text.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-fullscreen.js"></script>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-  <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/css/jspsych.css"></link>
+  <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/css/jspsych.css"></link>
   <!-- <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/css/aanvullend.css"></link> -->
   <!-- <link rel="stylesheet" href="C:\Users\mitch\OneDrive - UGent\UGent\Projects\1. Van de Velde et al\Experimental task\MVP-html\aanvullend.css"></link> -->
   <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey2/upload/surveys/929245/files/code/aanvullend.css"></link> // bevat button css
@@ -29,11 +29,14 @@ Next to DO: CSS opmaak fixen. -->
 ////////////// SCRIPT START /////////////////
 
 var timeline = [];
+var debugging = 0;
 
-timeline.push({
-  type: 'fullscreen',
-  fullscreen_mode: true
-});
+if (debugging == 0){
+  timeline.push({
+    type: 'fullscreen',
+    fullscreen_mode: true
+  });
+};
 
 var openingScreen = {
   type: 'html-button-response',
@@ -60,14 +63,15 @@ var sessionScreen =  {
 var instructions = {
   type: 'instructions',
   pages: [
-    'Welkom! Tijdens deze taak zal je een reeks van cijfers horen die ongeveer om de 3 seconden gepresenteerd worden. De snelheid waarmee de cijfers gepresenteerd zullen worden, is afhankelijk van jouw prestatie. <br> Probeer zo accuraat mogelijk te werken! ' +
+    'Welkom! Tijdens deze taak zal je een reeks van cijfers horen die ongeveer om de 4 seconden gepresenteerd worden. <br> Probeer zo accuraat mogelijk te werken! ' +
     '<br> Jouw taak bestaat eruit te luisteren naar de eerste twee cijfers, deze samen te tellen en vervolgens op de som van deze twee cijfers te klikken. Als je het volgende cijfer hoort, tel dat dan op bij het cijfer dat daar juist voor gepresenteerd werd en klik op de nieuwe som. ' +
     '<br> Ga telkens verder door het volgende cijfer op te tellen bij het vorige. ' +
     '<br> Je hoeft geen totaalscore bij te houden, maar enkel de som van de laatste 2 cijfers.',
     'Bijvoorbeeld: als de eerste twee cijfers 5 en 7 zijn, dan dien je op 12 te klikken (want 5 + 7 = 12). ' +
-    '<br> Als het volgende cijfer 3 is, dan wordt jouw volgend antwoord 10 (want 7 + 3 = 10). Als daarna het volgende cijfer 2 is, dan is 5 het correcte antwoord (want 3 + 2 = 5). ' +
+    '<br>Als het volgende cijfer 3 is, dan wordt jouw volgend antwoord 10 (want 7 + 3 = 10). Als daarna het volgende cijfer 2 is, dan is 5 het correcte antwoord (want 3 + 2 = 5). ' +
     '<br><br> Je zal telkens een reeks van mogelijke antwoorden op het scherm zien. Je kan antwoorden door op het cijfer te klikken dat correspondeert met de som. ' +
-    '<br><b> Opgelet: op het eerste cijfer mag je het gehoorde cijfer antwoorden omdat er nog geen voorgaand cijfer is om erbij op te tellen.</b>',
+    '<br><b> Opgelet: op het eerste cijfer mag je het gehoorde cijfer antwoorden omdat er nog geen voorgaand cijfer is om erbij op te tellen.</b>' +
+    '<br><br><img src = https://ghepmk01.ugent.be/limesurvey2/upload/surveys/577861/files/uitleg.jpg>',
     'Dit is een uitdagende taak en zal ongeveer 20 minuten duren. ' +
     '<br>Als je even de tel kwijt geraakt, probeer gewoon verder te gaan door naar de volgende twee cijfers te luisteren en deze terug op te tellen. ' +
     '<br><br>We zullen starten met enkele oefeningen. Tijdens deze oefeningen zal je feedback krijgen over de juistheid van je antwoord. ' +
@@ -98,41 +102,41 @@ var audioNumbers = [];
 var practiceDuration = 3500;
 var practiceFeedbackDuration = 1000;
 var practiceStrictness = 2; // Less than this many of correct for another practice round
-var trialDuration = 3000;
-var maxDuration = 4000;
-var minDuration = 2000;
-var newTESTING = 10;
+var trialDuration = 4000;
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
-
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
-
     // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;
-
     // And swap it with the current element.
     temporaryValue = array[currentIndex];
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
   }
-
   return array;
 }
 
-var numberOfTrials = 8;
-var numberOfIterations = 2;
-var numberOfPractice = 5;
+var blockAmount = 3;
+var numberOfTrials = 400 + blockAmount; // This is in total (ADD +1 FOR THE AMOUNT OF BLOCKS)
+var blockLength = numberOfTrials/blockAmount; // Change if blocks are not the same size
+var numberOfStimuli = 9;
+var numberOfIterations = Math.ceil(numberOfTrials/numberOfStimuli) // How often the max different amount of trials fit into number of trials per block
+var numberOfPractice = 11;
 
-for (i = 0; i <= numberOfTrials; i++) {
+for (i = 0; i <= numberOfStimuli -1; i++) {
   j = i+1;
   tempStimuli.push('https://ghepmk01.ugent.be/limesurvey/upload/projects/pasat/AttentionTraining/WAV/' + j + '.wav'); // for Pre-loading stimuli
-  if(i==numberOfTrials) {
+  if(i==numberOfStimuli-1) {
     for (t = 0; t <= numberOfIterations-1; t++){
-      tempStimuli = shuffle(tempStimuli);
-      allStimuli = allStimuli.concat(tempStimuli);
+      tempStimuli = shuffle(tempStimuli); // shuffle trials
+      allStimuli = allStimuli.concat(tempStimuli); // add trials to full trial set
+      if(Object.keys(allStimuli).length >= numberOfTrials){ // this is always the case
+        allStimuli = shuffle(allStimuli.slice(0, numberOfTrials)); // Remake it into numberOfTrials trials max And shuffle again.
+        break;
+      }
     }
     // allStimuli = shuffle(allStimuli);
   }

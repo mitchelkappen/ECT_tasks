@@ -18,7 +18,6 @@ Next to DO: CSS opmaak fixen. -->
   <!-- <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/css/aanvullend.css"></link> -->
   <!-- <link rel="stylesheet" href="C:\Users\mitch\OneDrive - UGent\UGent\Projects\1. Van de Velde et al\Experimental task\MVP-html\aanvullend.css"></link> -->
   <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey2/upload/surveys/929245/files/code/aanvullend.css"></link> // bevat button css
-  <!-- <link rel="stylesheet" href="C:/Users/mitch/OneDrive/Documents/GitHub/ECT_tasks/aPASAT/css/aanvullend.css"></link> // bevat button css -->
 
   <style>
 
@@ -107,33 +106,26 @@ var practiceDuration = 5000;
 var practiceFeedbackDuration = 1000;
 var practiceStrictness = 2; // Less than this many of correct for another practice round
 var trialDuration = 3000;
-var maxDuration = 4000;
-var minDuration = 2000;
-var newTESTING = 10;
 
 var ITIs = [4000, 3000, 2000];
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
-
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
-
     // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;
-
     // And swap it with the current element.
     temporaryValue = array[currentIndex];
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
   }
-
   return array;
 }
 
-var numberOfTrials = 183; // Per block (have to add +1 because first trial isnt added to anything)
 var blockAmount = 3;
+var numberOfTrials = 180 + blockAmount; // This is in total (have to add +1 because first trial isnt added to anything)
 var blockLength = numberOfTrials/blockAmount; // Change if blocks are not the same size
 var numberOfStimuli = 9;
 var numberOfIterations = Math.ceil(numberOfTrials/numberOfStimuli) // How often the max different amount of trials fit into number of trials per block
