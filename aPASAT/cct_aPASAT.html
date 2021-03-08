@@ -18,8 +18,8 @@ Next to DO: CSS opmaak fixen. -->
 
   <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/css/jspsych.css"></link>
   <!-- <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/css/aanvullend.css"></link> -->
-  <!-- <link rel="stylesheet" href="C:\Users\mitch\OneDrive - UGent\UGent\Projects\1. Van de Velde et al\Experimental task\MVP-html\aanvullend.css"></link> -->
-  <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey2/upload/surveys/929245/files/code/aanvullend.css"></link> // bevat button css
+  <!-- <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey2/upload/surveys/929245/files/code/aanvullend.css"></link> // bevat button css -->
+  <link rel="stylesheet" href="C:/Users/mitch/OneDrive/Documents/GitHub/ECT_tasks/aPASAT/aanvullend.css"></link> // bevat button css
 
   <style>
 
@@ -115,7 +115,7 @@ var practiceStats = [];
 var correctAnswers = [];
 var audioNumbers = [];
 
-var practiceDuration = 3500;
+var practiceDuration = 4000;
 var practiceFeedbackDuration = 1000;
 var practiceStrictness = 2; // Less than this many of correct for another practice round
 var trialDuration = 4000;
@@ -135,7 +135,7 @@ function shuffle(array) {
   return array;
 }
 
-var blockAmount = 3;
+var blockAmount = 2;
 var numberOfTrials = 400 + blockAmount; // This is in total (ADD +1 FOR THE AMOUNT OF BLOCKS)
 var blockLength = numberOfTrials/blockAmount; // Change if blocks are not the same size
 var numberOfStimuli = 9;
@@ -160,7 +160,8 @@ for (i = 0; i <= numberOfStimuli -1; i++) {
 //////////////////////////////////////////////////////
 function makePracticeBlock(){
   makePracticeTrials();
-  if(practiceCorrect<=practiceStrictness) {
+  // if(practiceCorrect<=practiceStrictness) {
+  if(1 == 0) {
     practiceTimeline.push( {
       type: 'html-button-response',
       stimulus: 'Om zeker te weten dat u de taak goed begrijpt doen we nog een paar oefenvragen'+
@@ -207,9 +208,9 @@ function makePracticeTrials(){
       margin_horizontal: '2%',
       // prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>', // Contains a block around feedback
       prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:0px solid #000;">Empty Block</div>',
-      trial_duration: practiceDuration,
+      // trial_duration: practiceDuration,
+      trial_duration: 1000000,
       response_allowed_while_playing: false,
-      // trial_duration: 1000000,
       response_ends_trial: true,
       on_load: function(data) {
         if (practiceStats.length) {
@@ -233,8 +234,8 @@ function makePracticeTrials(){
           wrongPracticeCounter = 0;
         }
 
-        // document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: <b>' + lastPracticeResponse + '</b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
-        document.getElementById('feedbackBlock').innerHTML = practiceResponseHTML;
+        document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: <b>' + lastPracticeResponse + '</b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
+        // document.getElementById('feedbackBlock').innerHTML = practiceResponseHTML;
       },
 
       on_finish: function(data) {
@@ -295,7 +296,7 @@ function makePracticeTrials(){
           trial.trial_duration = practiceDuration - jsPsych.data.getLastTrialData().select('rt').values[0];
         } else {
           trial.trial_duration = 0;
-        }
+        };
       },
 
       on_load: function(data) {
@@ -324,8 +325,8 @@ function makePracticeTrials(){
         } else {
           wrongPracticeCounter = 0;
         }
-        // document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: <b>' + lastPracticeResponse + '</b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
-        document.getElementById('feedbackBlock').innerHTML = practiceResponseHTML;
+        document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: <b>' + lastPracticeResponse + '</b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
+        // document.getElementById('feedbackBlock').innerHTML = practiceResponseHTML;
       },
     } )
   }
@@ -370,6 +371,7 @@ for (b = 0; b <= blockAmount-1; b++) { // Loop over the different blocks
       margin_horizontal: '2%',
       // prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>',
       trial_duration: trialDuration,
+      // trial_duration: 100000,
       response_allowed_while_playing: false,
       response_ends_trial: true,
       on_load: function(data) {
@@ -516,7 +518,7 @@ if (debugging == 0){
 
 // timeline.push(instructions);
 
-// timeline = timeline.concat(practiceTimeline);
+timeline = timeline.concat(practiceTimeline);
 
 timeline = timeline.concat(audioTrialsTimeline);
 
