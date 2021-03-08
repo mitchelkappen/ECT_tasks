@@ -208,8 +208,8 @@ function makePracticeTrials(){
       margin_horizontal: '2%',
       // prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>', // Contains a block around feedback
       prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:0px solid #000;">Empty Block</div>',
-      // trial_duration: practiceDuration,
-      trial_duration: 1000000,
+      trial_duration: practiceDuration,
+      // trial_duration: 1000000,
       response_allowed_while_playing: false,
       response_ends_trial: true,
       on_load: function(data) {
@@ -217,10 +217,10 @@ function makePracticeTrials(){
 
           if(practiceStats[practiceStats.length-1] == 1){
             var lastPracticeResponse = "Correct";
-            var practiceResponseHTML = '<p style="color:green; font-size:50px">' + lastPracticeResponse + '</p>';
+            var practiceResponseHTML = 'Laatse antwoord is: <b> <span style="color:green">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
           } else {
             var lastPracticeResponse = "Incorrect"
-            var practiceResponseHTML = '<p style="color:red; font-size:50px">' + lastPracticeResponse + '</p>';
+            var practiceResponseHTML = 'Laatse antwoord is: <b> <span style="color:red">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
           };
         } else {
           var lastPracticeResponse = " ";
@@ -233,9 +233,7 @@ function makePracticeTrials(){
         if(wrongCount.length < 1) {
           wrongPracticeCounter = 0;
         }
-
-        document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: <b>' + lastPracticeResponse + '</b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
-        // document.getElementById('feedbackBlock').innerHTML = practiceResponseHTML;
+        document.getElementById('feedbackBlock').innerHTML = practiceResponseHTML;
       },
 
       on_finish: function(data) {
@@ -302,10 +300,10 @@ function makePracticeTrials(){
       on_load: function(data) {
         if(practiceStats[practiceStats.length-1] == 1){
           var lastPracticeResponse = "Correct";
-          var practiceResponseHTML = '<p style="color:green; font-size:50px">' + lastPracticeResponse + '</p>';
+          var practiceResponseHTML = 'Laatse antwoord is: <b> <span style="color:green">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
         } else {
           var lastPracticeResponse = "Incorrect"
-          var practiceResponseHTML = '<p style="color:red; font-size:50px">' + lastPracticeResponse + '</p>';
+          var practiceResponseHTML = 'Laatse antwoord is: <b> <span style="color:red">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
         };
 
         if(correctCount.length > 0) {
@@ -325,8 +323,8 @@ function makePracticeTrials(){
         } else {
           wrongPracticeCounter = 0;
         }
-        document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: <b>' + lastPracticeResponse + '</b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
-        // document.getElementById('feedbackBlock').innerHTML = practiceResponseHTML;
+        // document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: <b>' + lastPracticeResponse + '</b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
+        document.getElementById('feedbackBlock').innerHTML = practiceResponseHTML;
       },
     } )
   }
