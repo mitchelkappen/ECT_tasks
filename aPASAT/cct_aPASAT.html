@@ -351,10 +351,12 @@ practiceTimeline.push( {
 // EXPERIMENTAL DESIGN
 // Start loop to loop through all the blocks with each a different ITI
 // BLOCK 1
-for (b = 0; b <= blockAmount-1; b++) { // Loop over the different blocks
+audioTrialsTimelineComplete = [];
+
+function makeTrialBlock(blockNumber){
   var trialDuration = 4000; // Reset trialDuration before starting actual experiment
   var audioTrialsTimeline = [];
-  blockNum = b;
+  blockNum = blockNumber;
   upperLim = ((blockNum+1)*blockLength);
   blockStimuli = allStimuli.slice(blockNum*blockLength, upperLim); // Make variable of length Blocklength consisting of relevant trials for this block
   console.log(blockStimuli)
@@ -485,9 +487,7 @@ for (b = 0; b <= blockAmount-1; b++) { // Loop over the different blocks
         // document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: ' + lastResponse + '<br>Aantal correct op een rij: ' + correctCounter + '<br>Aantal fout op een rij: ' + wrongCounter + '<br>Snelheid: ' + trialDuration + ' ms';
       },
     } )
-
-  } // End of trial loop
-
+  } // End of Trial loop
   if(b == blockAmount){
     audioTrialsTimeline.push( {
       type: 'html-keyboard-response',
@@ -503,8 +503,13 @@ for (b = 0; b <= blockAmount-1; b++) { // Loop over the different blocks
       choices: jsPsych.ANY_KEYS,
     } )
   };
+  audioTrialsTimelineComplete = audioTrialsTimelineComplete.concat(audioTrialsTimeline) // Add to main line
+} // End of make trial block function
 
-}
+for (b = 0; b <= blockAmount-1; b++) { //
+  makeTrialBlock(b)
+};
+
 //////////////// PUSH IT ALL /////////////////
 
 timeline.push(openingScreen);
@@ -516,9 +521,9 @@ if (debugging == 0){
 
 // timeline.push(instructions);
 
-timeline = timeline.concat(practiceTimeline);
+// timeline = timeline.concat(practiceTimeline);
 
-timeline = timeline.concat(audioTrialsTimeline);
+timeline = timeline.concat(audioTrialsTimelineComplete);
 
 var webcamStop = {
   type:'external-html',
