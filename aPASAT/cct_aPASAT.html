@@ -18,8 +18,8 @@ Next to DO: CSS opmaak fixen. -->
 
   <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/css/jspsych.css"></link>
   <!-- <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/css/aanvullend.css"></link> -->
-  <!-- <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey2/upload/surveys/929245/files/code/aanvullend.css"></link> // bevat button css -->
-  <link rel="stylesheet" href="C:/Users/mitch/OneDrive/Documents/GitHub/ECT_tasks/aPASAT/aanvullend.css"></link> // bevat button css
+  <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey2/upload/surveys/418355/files/aanvullend.css"></link> // bevat button css
+  <!-- <link rel="stylesheet" href="C:/Users/mitch/OneDrive/Documents/GitHub/ECT_tasks/aPASAT/aanvullend.css"></link> // bevat button css -->
 
   <style>
 
@@ -31,7 +31,7 @@ Next to DO: CSS opmaak fixen. -->
 ////////////// SCRIPT START /////////////////
 
 var timeline = [];
-var debugging = 1;
+var debugging = 0;
 
 if (debugging == 0){
   timeline.push({
@@ -42,7 +42,7 @@ if (debugging == 0){
 
 var openingScreen = {
   type: 'html-button-response',
-  stimulus: 'Klik hieronder om het experiment te starten. '+
+  stimulus: 'Klik hieronder om de taak te starten. '+
   '',
   choices: ['Start!']
 };
@@ -160,33 +160,21 @@ for (i = 0; i <= numberOfStimuli -1; i++) {
 //////////////////////////////////////////////////////
 function makePracticeBlock(){
   makePracticeTrials();
-  // if(practiceCorrect<=practiceStrictness) {
-  if(1 == 0) {
-    practiceTimeline.push( {
-      type: 'html-button-response',
-      stimulus: 'Om zeker te weten dat u de taak goed begrijpt doen we nog een paar oefenvragen'+
-      '<br>De oefeing blijft hetzelfde: tel steeds de laatste twee gehoorde cijfers op en klik op de som. ',
-      choices: ['Volgende']
-    });
-    makePracticeTrials();
-    allStimuli = shuffle(allStimuli);
-  } else {
-    practiceTimeline.push( {
-      type: 'html-button-response',
-      stimulus: 'Dit was de oefening. Nu zullen we beginnen met de echte taak. '+
-      '<br>Deze blijft gelijk: tel steeds de laatste twee gehoorde cijfers op en klik op de som. ',
-      choices: ['Volgende']
-    });
+  practiceTimeline.push( {
+    type: 'html-button-response',
+    stimulus: 'Dit was de oefening. Nu zullen we beginnen met de echte taak. '+
+    '<br>Deze blijft gelijk: tel steeds de laatste twee gehoorde cijfers op en klik op de som. ',
+    choices: ['Volgende']
+  });
 
-    practiceTimeline.push( {
-      type: 'html-button-response',
-      stimulus: 'Als je het goed doet, zullen de trials sneller aangeboden worden. Het is belangrijk dat je probeert om zo accuraat mogelijk te antwoorden! ' +
-      '<br>Je zal nu geen feedback meer krijgen over de juistheid van je antwoord. '+
-      '<br>Klik op "Start!" om de taak te starten. ',
-      choices: ['Start!']
-    });
-    allStimuli = shuffle(allStimuli);
-  }
+  practiceTimeline.push( {
+    type: 'html-button-response',
+    stimulus: 'Als je het goed doet, zullen de cijfers sneller aangeboden worden. Het is belangrijk dat je probeert om zo accuraat mogelijk te antwoorden! ' +
+    '<br>Je zal nu geen feedback meer krijgen over de juistheid van je antwoord. '+
+    '<br>Klik op "Start!" om de taak te starten. ',
+    choices: ['Start!']
+  });
+  allStimuli = shuffle(allStimuli);
 }
 
 function makePracticeTrials(){
@@ -332,25 +320,8 @@ function makePracticeTrials(){
 
 makePracticeBlock(); // Make it for real!
 
-practiceTimeline.push( {
-  type: 'html-button-response',
-  stimulus: 'Dit was de oefening. Nu zullen we beginnen met de echte taak. '+
-  '<br>Deze blijft gelijk: tel steeds de laatste twee gehoorde cijfers op en klik op de som. ',
-  choices: ['Volgende']
-});
-
-practiceTimeline.push( {
-  type: 'html-button-response',
-  stimulus: 'Als je het goed doet, zullen de trials sneller aangeboden worden. Het is belangrijk dat je probeert om zo accuraat mogelijk te antwoorden! ' +
-  '<br>Je zal nu geen feedback meer krijgen over de juistheid van je antwoord. '+
-  '<br>Klik op "Start!" om de taak te starten. ',
-  choices: ['Start!']
-});
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // EXPERIMENTAL DESIGN
-// Start loop to loop through all the blocks with each a different ITI
-// BLOCK 1
 audioTrialsTimelineComplete = [];
 
 function makeTrialBlock(blockNumber){
@@ -359,9 +330,9 @@ function makeTrialBlock(blockNumber){
   blockNum = blockNumber;
   upperLim = ((blockNum+1)*blockLength);
   blockStimuli = allStimuli.slice(blockNum*blockLength, upperLim); // Make variable of length Blocklength consisting of relevant trials for this block
-  console.log(blockStimuli)
+  // console.log(blockStimuli)
   for (i = 0; i < blockLength-1; i++) {
-    console.log(i)
+    // console.log(i)
     audioTrialsTimeline.push( {     //add it to design
       type: 'audio-button-response-mk',
       stimulus: blockStimuli[i],
@@ -519,9 +490,9 @@ if (debugging == 0){
   timeline.push(soundCheck);
 };
 
-// timeline.push(instructions);
+timeline.push(instructions);
 
-// timeline = timeline.concat(practiceTimeline);
+timeline = timeline.concat(practiceTimeline);
 
 timeline = timeline.concat(audioTrialsTimelineComplete);
 
@@ -585,25 +556,26 @@ function saveData(name, data){
 jsPsych.init( {
   timeline: timeline,
   preload_audio: allStimuli,
-  // default_iti: 1000,
   use_webaudio: false,
   on_finish: function() {
-    var filenameID  = "data_"+ jsPsych.data.get().select('subject').values[0] + "_" + jsPsych.data.get().select('session').values[0] + "_"+Datum; // Filename
-    var interactionID  = "interactionData/interactData_"+ jsPsych.data.get().select('subject').values[0] +"_"+ jsPsych.data.get().select('session').values[0] +"_"+Datum; // Filename
+    var filenameID  = "data_CCT1_ID_"+ jsPsych.data.get().select('subject').values[0] + "_Sesh_" + jsPsych.data.get().select('session').values[0] + "_Date_"+Datum; // Filename
+    var interactionID  = "interactionData/interactData_CCT1_ID_"+ jsPsych.data.get().select('subject').values[0] +"_Sesh_"+ jsPsych.data.get().select('session').values[0] +"_Date_"+Datum; // Filename
 
     console.log(filenameID)
     console.log(interactionID)
     // console.log(jsPsych.data.get().csv()); // Show data in console
-    // jsPsych.data.get().localSave('csv','mydata.csv'); // Save CSV locally (misschien goed idee als backup bij de ECT studie?)
+    jsPsych.data.get().localSave('csv',filenameID); // Save CSV locally (misschien goed idee als backup bij de ECT studie?)
     saveData(filenameID,jsPsych.data.get().csv());       // Voeg bij naam nog participant ID enzo in, maar moet er een invoer voor bestaan voor het experiment
 
     // jsPsych.data.displayData('json');
     var interactionData = jsPsych.data.getInteractionData();
     saveData(interactionID, interactionData.csv());
-    // window.location = "https://www.google.com";
   },
   on_close: function() {
-    saveData(filenameID,jsPsych.data.get().csv());       // Voeg bij naam nog participant ID enzo in, maar moet er een invoer voor bestaan voor het experiment
+    var filenameID  = "data_incomplete_CCT1_ID_"+ jsPsych.data.get().select('subject').values[0] + "_Sesh_" + jsPsych.data.get().select('session').values[0] + "_Date_"+Datum; // Filename
+    saveData(filenameID,jsPsych.data.get().csv());
+    var interactionID  = "interactionData/interactData_CCT1_ID_"+ jsPsych.data.get().select('subject').values[0] +"_Sesh_"+ jsPsych.data.get().select('session').values[0] +"_Date_"+Datum; // Filename
+
     var interactionData = jsPsych.data.getInteractionData();
     saveData(interactionID, interactionData.csv());
   }

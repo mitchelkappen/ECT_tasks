@@ -6,7 +6,8 @@ $name = "data/".$post_data['filename'].".csv";
 // $name = "data/test_data.csv";
 
 $data = $post_data['filedata'];
-echo "Joehoe, PHP voor CSV wordt gebruikt!";
+// echo "Joehoe, PHP voor CSV wordt gebruikt!";
 // write the file to disk
 file_put_contents($name, $data);
 ?>
+
