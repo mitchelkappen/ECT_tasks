@@ -31,7 +31,7 @@ Next to DO: CSS opmaak fixen. -->
 ////////////// SCRIPT START /////////////////
 
 var timeline = [];
-var debugging = 0;
+var debugging = 1;
 
 if (debugging == 0){
   timeline.push({
@@ -136,7 +136,7 @@ function shuffle(array) {
 }
 
 var blockAmount = 2;
-var numberOfTrials = 400 + blockAmount; // This is in total (ADD +1 FOR THE AMOUNT OF BLOCKS)
+var numberOfTrials = 10 + blockAmount; // This is in total (ADD +1 FOR THE AMOUNT OF BLOCKS)
 var blockLength = numberOfTrials/blockAmount; // Change if blocks are not the same size
 var numberOfStimuli = 9;
 var numberOfIterations = Math.ceil(numberOfTrials/numberOfStimuli) // How often the max different amount of trials fit into number of trials per block
@@ -325,7 +325,6 @@ makePracticeBlock(); // Make it for real!
 audioTrialsTimelineComplete = [];
 
 function makeTrialBlock(blockNumber){
-  var trialDuration = 4000; // Reset trialDuration before starting actual experiment
   var audioTrialsTimeline = [];
   blockNum = blockNumber;
   upperLim = ((blockNum+1)*blockLength);
@@ -345,6 +344,9 @@ function makeTrialBlock(blockNumber){
       // trial_duration: 100000,
       response_allowed_while_playing: false,
       response_ends_trial: true,
+      on_start: function(trial) { // This function changes trialDuration for the remainder of the supposed length. e.g. if trials should last 3 seconds, and someone answers in 1 second, this changes trialDuration for the rest of this trial to 2 seconds.
+        trial.trial_duration = trialDuration; // This has to be done due to how JavaScript works. Else when there is no answer given - it will always be 4000 ms for those trials.
+      },
       on_load: function(data) {
         if (performanceStats.length) {
           if(performanceStats[performanceStats.length-1] == 1){
@@ -370,6 +372,7 @@ function makeTrialBlock(blockNumber){
 
       on_finish: function(data) {
         data.ITI = trialDuration;
+        console.log('trialDuration initial trial is: ', trialDuration)
         data.block = 1;
         if (performanceStats.length) {
           var stimNumber = parseInt(data.stimulus[data.stimulus.length-5],10);
@@ -422,8 +425,12 @@ function makeTrialBlock(blockNumber){
       on_start: function(trial) { // This function changes trialDuration for the remainder of the supposed length. e.g. if trials should last 3 seconds, and someone answers in 1 second, this changes trialDuration for the rest of this trial to 2 seconds.
         if (jsPsych.data.getLastTrialData().select('rt').values[0] > 0) {
           trial.trial_duration = trialDuration - jsPsych.data.getLastTrialData().select('rt').values[0];
+          console.log('Trial Duration is: ', trialDuration)
+          console.log(trial.trial_duration)
         } else {
           trial.trial_duration = 0;
+          console.log('Trial Duration (after non-response) is: ', trialDuration)
+          console.log(trial.trial_duration)
         }
       },
 
@@ -459,7 +466,7 @@ function makeTrialBlock(blockNumber){
       },
     } )
   } // End of Trial loop
-  if(b == blockAmount){
+  if(b == blockAmount-1){
     audioTrialsTimeline.push( {
       type: 'html-keyboard-response',
       stimulus: 'Dit is het einde van de taak van vandaag.' +
@@ -477,6 +484,7 @@ function makeTrialBlock(blockNumber){
   audioTrialsTimelineComplete = audioTrialsTimelineComplete.concat(audioTrialsTimeline) // Add to main line
 } // End of make trial block function
 
+var trialDuration = 4000; // Reset trialDuration before starting actual experiment // This is outside of the loop so the trialDuration does not get reset when a new block starts
 for (b = 0; b <= blockAmount-1; b++) { //
   makeTrialBlock(b)
 };
@@ -492,7 +500,7 @@ if (debugging == 0){
 
 timeline.push(instructions);
 
-timeline = timeline.concat(practiceTimeline);
+// timeline = timeline.concat(practiceTimeline);
 
 timeline = timeline.concat(audioTrialsTimelineComplete);
 
