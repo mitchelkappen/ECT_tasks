@@ -1,5 +1,4 @@
-<!-- Last edit 4-6: If someone fails to answer or only has 1 correct in practice, repeat practice block
-Next to DO: CSS opmaak fixen. -->
+<!-- Last edit 16-3: Complete workable file - check Github for implementations -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,7 +30,7 @@ Next to DO: CSS opmaak fixen. -->
 ////////////// SCRIPT START /////////////////
 
 var timeline = [];
-var debugging = 1;
+var debugging = 0;
 
 if (debugging == 0){
   timeline.push({
@@ -83,6 +82,8 @@ var instructions = {
     '<br> Jouw taak bestaat eruit te luisteren naar de eerste twee cijfers, deze samen te tellen en vervolgens op de som van deze twee cijfers te klikken. Als je het volgende cijfer hoort, tel dat dan op bij het cijfer dat daar juist voor gepresenteerd werd en klik op de nieuwe som. ' +
     '<br> Ga telkens verder door het volgende cijfer op te tellen bij het vorige. ' +
     '<br> Je hoeft geen totaalscore bij te houden, maar enkel de som van de laatste 2 cijfers.',
+    'Hier een korte video instructie:<br><br>' +
+    '<video width="100%" height="100%" controls autoplay> <source src="https://ghepmk01.ugent.be/limesurvey/upload/projects/pasat/AttentionTraining/videos/apasat.mp4" type="video/mp4"> </video> <p> <br><br></p>',
     'Bijvoorbeeld: als de eerste twee cijfers 5 en 7 zijn, dan dien je op 12 te klikken (want 5 + 7 = 12). ' +
     '<br>Als het volgende cijfer 3 is, dan wordt jouw volgend antwoord 10 (want 7 + 3 = 10). Als daarna het volgende cijfer 2 is, dan is 5 het correcte antwoord (want 3 + 2 = 5). ' +
     '<br><br> Je zal telkens een reeks van mogelijke antwoorden op het scherm zien. Je kan antwoorden door op het cijfer te klikken dat correspondeert met de som. ' +
@@ -136,7 +137,7 @@ function shuffle(array) {
 }
 
 var blockAmount = 2;
-var numberOfTrials = 10 + blockAmount; // This is in total (ADD +1 FOR THE AMOUNT OF BLOCKS)
+var numberOfTrials = 400 + blockAmount; // This is in total (ADD +1 FOR THE AMOUNT OF BLOCKS)
 var blockLength = numberOfTrials/blockAmount; // Change if blocks are not the same size
 var numberOfStimuli = 9;
 var numberOfIterations = Math.ceil(numberOfTrials/numberOfStimuli) // How often the max different amount of trials fit into number of trials per block
@@ -227,12 +228,13 @@ function makePracticeTrials(){
       on_finish: function(data) {
         data.ITI = practiceDuration;
         data.block = 0;
+        tempStr = data.stimulus;
+        var stimNumber = tempStr.substring( // Get the ID of the audio signal that is being played
+          tempStr.lastIndexOf("WAV/") + 4,
+          tempStr.lastIndexOf(".wav")
+        )
+        audioNumbers.push(stimNumber);
         if (practiceStats.length) {
-          var stimNumber = parseInt(data.stimulus[data.stimulus.length-5],10);
-          if (stimNumber == 0) {
-            stimNumber = 10;
-          }
-          audioNumbers.push(stimNumber);
           var tempVal = audioNumbers[audioNumbers.length-1] + audioNumbers[audioNumbers.length-2];
           correctAnswers.push(tempVal)
           data.correct_answer_actual = tempVal;
@@ -241,7 +243,6 @@ function makePracticeTrials(){
           data.correct_answer = correctAnswers[correctAnswers.length-1]-1;
         } else {
           // If first trial
-          audioNumbers.push(parseInt(data.stimulus[data.stimulus.length-5],10));
           data.value = audioNumbers[audioNumbers.length-1];
           data.correct_answer= audioNumbers[audioNumbers.length-1]-1;
         }
@@ -259,6 +260,24 @@ function makePracticeTrials(){
           practiceStats.push(0);
           correctCount = [];
           wrongCount.push(1);
+        }
+
+        if(correctCount.length > 0) {
+          correctPracticeCounter = correctCount.length;
+          if(correctPracticeCounter == 4) {
+            trialDuration = trialDuration;
+          }
+        } else {
+          correctPracticeCounter = 0;
+        }
+
+        if(wrongCount.length > 0) {
+          wrongPracticeCounter = wrongCount.length;
+          if(wrongPracticeCounter == 4) {
+            trialDuration = trialDuration;
+          }
+        } else {
+          wrongPracticeCounter = 0;
         }
         return feedbackWord;
       }
@@ -293,24 +312,6 @@ function makePracticeTrials(){
           var lastPracticeResponse = "Incorrect"
           var practiceResponseHTML = 'Laatse antwoord is: <b> <span style="color:red">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
         };
-
-        if(correctCount.length > 0) {
-          correctPracticeCounter = correctCount.length;
-          if(correctPracticeCounter == 4) {
-            trialDuration = trialDuration;
-          }
-        } else {
-          correctPracticeCounter = 0;
-        }
-
-        if(wrongCount.length > 0) {
-          wrongPracticeCounter = wrongCount.length;
-          if(wrongPracticeCounter == 4) {
-            trialDuration = trialDuration;
-          }
-        } else {
-          wrongPracticeCounter = 0;
-        }
         // document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: <b>' + lastPracticeResponse + '</b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
         document.getElementById('feedbackBlock').innerHTML = practiceResponseHTML;
       },
@@ -372,23 +373,21 @@ function makeTrialBlock(blockNumber){
 
       on_finish: function(data) {
         data.ITI = trialDuration;
-        console.log('trialDuration initial trial is: ', trialDuration)
         data.block = 1;
+        tempStr = data.stimulus;
+        var stimNumber = tempStr.substring( // Get the ID of the audio signal that is being played
+          tempStr.lastIndexOf("WAV/") + 4,
+          tempStr.lastIndexOf(".wav")
+        )
+        audioNumbers.push(stimNumber);
         if (performanceStats.length) {
-          var stimNumber = parseInt(data.stimulus[data.stimulus.length-5],10);
-          if (stimNumber == 0) {
-            stimNumber = 10;
-          }
-          audioNumbers.push(stimNumber);
           var tempVal = audioNumbers[audioNumbers.length-1] + audioNumbers[audioNumbers.length-2];
           correctAnswers.push(tempVal)
           data.correct_answer_actual = tempVal;
-          // data: {value: audioNumbers[audioNumbers.length-1], correct_answer: correctAnswers[correctAnswers.length-1]-1},
           data.value = audioNumbers[audioNumbers.length-1];
           data.correct_answer = correctAnswers[correctAnswers.length-1]-1;
         } else {
           // If first trial
-          audioNumbers.push(parseInt(data.stimulus[data.stimulus.length-5],10));
           data.value = audioNumbers[audioNumbers.length-1];
           data.correct_answer= audioNumbers[audioNumbers.length-1]-1;
         }
@@ -470,7 +469,7 @@ function makeTrialBlock(blockNumber){
     audioTrialsTimeline.push( {
       type: 'html-keyboard-response',
       stimulus: 'Dit is het einde van de taak van vandaag.' +
-      '<br> Druk op een toets om verder te gaan.',
+      '<br> Druk op een toets om uw data op te slaan en af te ronden.',
       choices: jsPsych.ANY_KEYS,
     } )
   } else {
@@ -491,7 +490,7 @@ for (b = 0; b <= blockAmount-1; b++) { //
 
 //////////////// PUSH IT ALL /////////////////
 
-timeline.push(openingScreen);
+// timeline.push(openingScreen);
 timeline.push(sessionScreen);
 if (debugging == 0){
   timeline.push(webcamStart);
@@ -500,7 +499,7 @@ if (debugging == 0){
 
 timeline.push(instructions);
 
-// timeline = timeline.concat(practiceTimeline);
+timeline = timeline.concat(practiceTimeline);
 
 timeline = timeline.concat(audioTrialsTimelineComplete);
 
@@ -512,20 +511,13 @@ var webcamStop = {
   on_load: function(){
     var temp = jsPsych.data.get().select('subject').values[0];
     var IDnumber = temp.substr(0,temp.length -2);
-    var filenameID  = 'data_'+ParticipantNo+'_'+ IDnumber +'_'+Datum + '_wCAM'; // Filename
+    var filenameID  = "data_CCT1_ID_"+ jsPsych.data.get().select('subject').values[0] + "_Sesh_" + jsPsych.data.get().select('session').values[0] + "_Date_"+Datum + '_preCAM'; // Filename
     saveData(filenameID,jsPsych.data.get().csv());
   }
 };
 
 timeline.push(soundCheck);
 timeline.push(webcamStop)
-
-timeline.push( {
-  type: 'html-button-response',
-  stimulus: 'Dit is het einde van de taak!'+
-  '<br>Druk op afsluiten om uw data op te slaan en af te ronden.',
-  choices: ['Afsluiten']
-});
 
 timeline.push({
   type: 'fullscreen',

@@ -1,79 +1,368 @@
+<!-- Last edit 16-3: Complete workable file - check Github for implementations
+To Do:
+
+Instructies + VIDEO change
+Niet optellen
+Niet extra trial voor x amount of blocks
+Numbers up to 18 ipv 9
+ -->
 <!DOCTYPE html>
 <html>
-  <head>
-    <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/jspsych.js"></script>
-    <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-audio-button-response.js"></script>
-    <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-html-button-response.js"></script>
-    <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
-    <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-instructions.js"></script>
-    <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/plugins/jspsych-survey-text.js"></script>
-    <script src="C:\Users\mitch\OneDrive - UGent\UGent\Topics\LimeSurvey\jspsych-6.1.0\plugins\jspsych-audio-button-response-elaborated.js"></script>
-    <script src="C:\Users\mitch\OneDrive - UGent\UGent\Topics\LimeSurvey\jspsych-6.1.0\plugins\jspsych-audio-button-response-poging2.js"></script>
+<head>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/jspsych.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-audio-button-response.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-audio-button-response-mk.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-html-button-response.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-html-keyboard-response.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-instructions.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-survey-text.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-fullscreen.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-external-html.js"></script>
+  <script src="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/plugins/jspsych-audio-keyboard-response.js"></script>
 
-    <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/css/jspsych.css"></link>
-    <!-- <link rel="stylesheet" href="C:\Users\mitch\OneDrive - UGent\UGent\Topics\LimeSurvey\jspsych-6.1.0\css\aanvullend.css"></link> // bevat button css -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-    <style>
+  <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.2.0/css/jspsych.css"></link>
+  <!-- <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey/plugins/jsPsych-6.1.0/css/aanvullend.css"></link> -->
+  <link rel="stylesheet" href="https://ghepmk01.ugent.be/limesurvey2/upload/surveys/418355/files/aanvullend.css"></link> // bevat button css
+  <!-- <link rel="stylesheet" href="C:/Users/mitch/OneDrive/Documents/GitHub/ECT_tasks/aPASAT/aanvullend.css"></link> // bevat button css -->
 
-</style>
-  </head>
-  <body></body>
-  <script>
+  <style>
 
-  ////////////// SCRIPT START /////////////////
+  </style>
+</head>
+<body></body>
+<script>
 
-  var timeline = [];
+////////////// SCRIPT START /////////////////
 
-    timeline.push({
-      type: 'html-button-response',
-      stimulus: 'Recent versions of Chrome require the user to interact with a page before it can play audio. '+
-      'Clicking the button below counts as an interaction. Be aware of this when planning audio experiments if '+
-      'you want the first trial to include audio.',
-      choices: ['Continue']
-    });
+var timeline = [];
+var debugging = 0;
 
-  // Actual part
-  var allStimuli = [];
-  var audioTrialsTimeline = [];
-  var i;
-  var feedbackWord = [];
-  var performanceStats = []; // Variable containing 1's and 0's for every trial (correct vs incorrect answers)
-  var correctCount = []; // variable that gets bigger (push) every time a correct answer is given. Reset when wrong answer is given.
-  var wrongCount = []; // variable that gets bigger (push) every time a wrong answer is given. Reset when correct answer is given.
+if (debugging == 0){
+  timeline.push({
+    type: 'fullscreen',
+    fullscreen_mode: true
+  });
+};
 
-  var practiceDuration = 3500;
-  var trialDuration = 3000;
-  var maxDuration = 4000;
-  var minDuration = 2000;
+var openingScreen = {
+  type: 'html-button-response',
+  stimulus: 'Klik hieronder om de taak te starten. '+
+  '',
+  choices: ['Start!']
+};
 
-  for (i = 0; i <= 6; i++) {
-    console.log(i);
-    j = i+1;
-      allStimuli.push('https://ghepmk01.ugent.be/limesurvey/upload/projects/pasat/AttentionTraining/' + j + '.wav'); // for Pre-loading stimuli
+var sessionScreen =  {
+  type: 'survey-text',
+  questions: [
+    {prompt: "Je hoeveelste huiswerksessie is dit?", rows: 1, columns: 5},
+    {prompt: "Wat is uw participanten nummer?", rows: 1, columns: 10}
+  ],
+  on_finish: function(data) {
+    var antwoord = JSON.parse(data.responses);
+    var SessionNo = antwoord.Q0;
+    var ParticipantNo = antwoord.Q1;
 
-    //add it to design
-      audioTrialsTimeline.push({
-      type: 'audio-button-response',
+    jsPsych.data.addProperties({subject: ParticipantNo, session: SessionNo});
+  }
+};
+
+var webcamStart = {
+  type:'external-html',
+  url: "startCamera.html",
+  cont_btn: "Volgende",
+  execute_script: true
+};
+
+var soundCheck = {
+  type: 'audio-keyboard-response',
+  stimulus: 'https://ghepmk01.ugent.be/limesurvey2/upload/surveys/781552/files/beep.wav',
+  choices: jsPsych.NO_KEYS,
+  trial_ends_after_audio : true,
+}
+
+var instructions = {
+  type: 'instructions',
+  pages: [
+    'Welkom! Tijdens deze taak zal je een reeks van cijfers horen die ongeveer om de 4 seconden gepresenteerd worden. <br> Probeer zo accuraat mogelijk te werken! ' +
+    '<br> Jouw taak bestaat eruit te luisteren naar het cijfer en vervolgens op het bijbehorende cijfer te klikken. ' +
+    '<br> Ga telkens verder door het volgende cijfer op te tellen bij het vorige. ' +
+    '<br> Je hoeft de cijfers dus niet bij elkaar op te tellen zoals eerder, maar enkel het gehoorde cijfer aan te klikken.',
+    'Hier een korte video instructie:<br><br>' +
+    '<video width="100%" height="100%" controls autoplay> <source src="https://ghepmk01.ugent.be/limesurvey/upload/projects/pasat/AttentionTraining/videos/act_edit.mp4" type="video/mp4"> </video> <p> <br><br></p>',
+    'Bijvoorbeeld: als de eerste twee cijfers 5 hoort, klikt up op het vakje waar "5" staat. ' +
+    '<br>Als het volgende cijfer 13 is, dan wordt jouw volgend antwoord "13". Als daarna het volgende cijfer 7 is, dan is "7" het correcte antwoord. ' +
+    '<br><br> Je zal telkens een reeks van mogelijke antwoorden op het scherm zien. Je kan antwoorden door op het cijfer te klikken dat correspondeert met het gehoorde cijfer. ',
+    'Dit is een uitdagende taak en zal ongeveer 20 minuten duren. ' +
+    '<br>Als het je even niet lukt, probeer dan gewoon verder te gaan door naar het volgende cijfer te luisteren en aan te klikken. ' +
+    '<br><br>We zullen starten met enkele oefeningen. Tijdens deze oefeningen zal je feedback krijgen over de juistheid van je antwoord. ' +
+    'Klik op "volgende" om de taak te starten. '
+  ],
+  show_clickable_nav: true,
+  allow_keys: false,
+  button_label_previous: 'vorige',
+  button_label_next: 'volgende'
+}
+
+// Actual part
+var allStimuli = [];
+var tempStimuli = []; // Preshuffle stimuli
+var audioTrialsTimeline = [];
+var practiceTimeline = [];
+var i;
+var rando;
+var feedbackWord = [];
+var performanceStats = []; // Variable containing 1's and 0's for every trial (correct vs incorrect answers)
+var practiceStats = [];
+// var correctCount = []; // variable that gets bigger (push) every time a correct answer is given. Reset when wrong answer is given.
+// var wrongCount = []; // variable that gets bigger (push) every time a wrong answer is given. Reset when correct answer is given.
+
+var correctAnswers = [];
+var audioNumbers = [];
+
+var practiceDuration = 4000;
+var practiceFeedbackDuration = 1000;
+var practiceStrictness = 2; // Less than this many of correct for another practice round
+var trialDuration = 4000;
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
+}
+
+var blockAmount = 2;
+var numberOfTrials = 400; // This is in total (ADD +1 FOR THE AMOUNT OF BLOCKS)
+var blockLength = numberOfTrials/blockAmount; // Change if blocks are not the same size
+var numberOfStimuli = 18;
+var numberOfIterations = Math.ceil(numberOfTrials/numberOfStimuli) // How often the max different amount of trials fit into number of trials per block
+var numberOfPractice = 10;
+
+for (i = 0; i <= numberOfStimuli -1; i++) {
+  j = i+1;
+  tempStimuli.push('https://ghepmk01.ugent.be/limesurvey/upload/projects/pasat/AttentionTraining/WAV/' + j + '.wav'); // for Pre-loading stimuli
+  if(i==numberOfStimuli-1) {
+    for (t = 0; t <= numberOfIterations-1; t++){
+      tempStimuli = shuffle(tempStimuli); // shuffle trials
+      allStimuli = allStimuli.concat(tempStimuli); // add trials to full trial set
+      if(Object.keys(allStimuli).length >= numberOfTrials){ // this is always the case
+        allStimuli = shuffle(allStimuli.slice(0, numberOfTrials)); // Remake it into numberOfTrials trials max And shuffle again.
+        break;
+      }
+    }
+    // allStimuli = shuffle(allStimuli);
+  }
+}
+//////////////////////////////////////////////////////
+function makePracticeBlock(){
+  makePracticeTrials();
+  practiceTimeline.push( {
+    type: 'html-button-response',
+    stimulus: 'Dit was de oefening. Nu zullen we beginnen met de echte taak. '+
+    '<br>Deze blijft gelijk: Klik telkens op het zojuist gehoorde cijer. ',
+    choices: ['Volgende']
+  });
+
+  practiceTimeline.push( {
+    type: 'html-button-response',
+    stimulus: 'Als je het goed doet, zullen de cijfers sneller aangeboden worden. Het is belangrijk dat je probeert om zo accuraat mogelijk te antwoorden! ' +
+    '<br>Je zal nu geen feedback meer krijgen over de juistheid van je antwoord. '+
+    '<br>Klik op "Start!" om de taak te starten. ',
+    choices: ['Start!']
+  });
+  allStimuli = shuffle(allStimuli);
+}
+
+function makePracticeTrials(){
+  practiceCorrect = 0;
+  wrongPracticeCounter = 0;
+  correctPracticeCounter = 0;
+  wrongCount = [];
+  correctCount = [];
+  feedbackWord = '';
+
+  for (i = 0; i <= numberOfPractice - 1; i++) {
+    // for (i = 0; i < 5; i++) {
+    practiceTimeline.push( {     //add it to design
+      type: 'audio-button-response-mk',
       stimulus: allStimuli[i],
       choices: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18'],
-      // prompt: "<p>What word was said?</p>", // Hier invoegen voor de streak etc? jsPsych.data.get en dan averagen ofzo idk
       button_html: '<button class="myButton">%choice%</button>',
-      // button_html: '<button class="myButton">%choice%</button>',
-      data: {value: j, correct_answer: i},
-      margin_vertical: '2%',
-      margin_horizontal: '3%',
-      prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>',
-      // trial_duration: trialDuration,
+      margin_vertical: '1%',
+      margin_horizontal: '2%',
+      // prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>', // Contains a block around feedback
+      prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:0px solid #000;">Empty Block</div>',
+      trial_duration: practiceDuration,
+      // trial_duration: 1000000,
+      response_allowed_while_playing: false,
+      response_ends_trial: true,
+      on_load: function(data) {
+        if (practiceStats.length) {
+
+          if(practiceStats[practiceStats.length-1] == 1){
+            var lastPracticeResponse = "Correct";
+            var practiceResponseHTML = 'Laatse antwoord is: <b> <span style="color:green">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
+          } else {
+            var lastPracticeResponse = "Incorrect"
+            var practiceResponseHTML = 'Laatse antwoord is: <b> <span style="color:red">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
+          };
+        } else {
+          var lastPracticeResponse = " ";
+          var practiceResponseHTML = '<p font-size:50px">' + lastPracticeResponse + '</p>';
+        };
+
+        if(correctCount.length < 1) {
+          correctPracticeCounter = 0;
+        }
+        if(wrongCount.length < 1) {
+          wrongPracticeCounter = 0;
+        }
+        document.getElementById('feedbackBlock').innerHTML = practiceResponseHTML;
+      },
+
+      on_finish: function(data) {
+        data.ITI = practiceDuration;
+        data.block = 0; // Practice block
+        tempStr = data.stimulus;
+        var stimNumber = tempStr.substring( // Get the ID of the audio signal that is being played
+          tempStr.lastIndexOf("WAV/") + 4,
+          tempStr.lastIndexOf(".wav")
+        )
+        audioNumbers.push(stimNumber);
+        if (practiceStats.length) {
+          var tempVal = audioNumbers[audioNumbers.length-1];
+          correctAnswers.push(tempVal)
+          data.correct_answer_actual = tempVal;
+          data.value = audioNumbers[audioNumbers.length-1];
+          data.correct_answer = correctAnswers[correctAnswers.length-1]-1;
+        } else {
+          // If first trial
+          data.value = audioNumbers[audioNumbers.length-1];
+          data.correct_answer= audioNumbers[audioNumbers.length-1]-1;
+        }
+
+        if(data.button_pressed == data.correct_answer.toString()){
+          data.correct = true;
+          var feedbackWord = 'Correct';
+          practiceCorrect = practiceCorrect + 1;
+          practiceStats.push(1);
+          wrongCount = [];
+          correctCount.push(1);
+        } else {
+          data.correct = false;
+          var feedbackWord = 'Incorrect';
+          practiceStats.push(0);
+          correctCount = [];
+          wrongCount.push(1);
+        }
+
+        if(correctCount.length > 0) {
+          correctPracticeCounter = correctCount.length;
+          if(correctPracticeCounter == 4) {
+            trialDuration = trialDuration;
+          }
+        } else {
+          correctPracticeCounter = 0;
+        }
+
+        if(wrongCount.length > 0) {
+          wrongPracticeCounter = wrongCount.length;
+          if(wrongPracticeCounter == 4) {
+            trialDuration = trialDuration;
+          }
+        } else {
+          wrongPracticeCounter = 0;
+        }
+        return feedbackWord;
+      }
+    } )
+
+    /////// ITI but with showing of choice options and feedback
+    practiceTimeline.push( {
+      type: 'audio-button-response-mk',
+      stimulus: 'https://ghepmk01.ugent.be/limesurvey/upload/projects/pasat/AttentionTraining/WAV/silent.wav',
+      choices: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18'],
+      button_html: '<button class="myButton" disabled>%choice%</button>',
+      // data: {value: j, correct_answer: i},
+      margin_vertical: '1%',
+      margin_horizontal: '2%',
+      // prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>', // Contains a block around feedback
+      prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:0px solid #000;">Empty Block</div>',
+      trial_duration: practiceDuration,
+      trial_ends_after_audio: false,
+      on_start: function(trial) {
+        if (jsPsych.data.getLastTrialData().select('rt').values[0] > 0) {
+          trial.trial_duration = practiceDuration - jsPsych.data.getLastTrialData().select('rt').values[0];
+        } else {
+          trial.trial_duration = 0;
+        };
+      },
+
+      on_load: function(data) {
+        if(practiceStats[practiceStats.length-1] == 1){
+          var lastPracticeResponse = "Correct";
+          var practiceResponseHTML = 'Laatse antwoord is: <b> <span style="color:green">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
+        } else {
+          var lastPracticeResponse = "Incorrect"
+          var practiceResponseHTML = 'Laatse antwoord is: <b> <span style="color:red">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
+        };
+        // document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: <b>' + lastPracticeResponse + '</b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
+        document.getElementById('feedbackBlock').innerHTML = practiceResponseHTML;
+      },
+    } )
+  }
+}
+
+makePracticeBlock(); // Make it for real!
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// EXPERIMENTAL DESIGN
+audioTrialsTimelineComplete = [];
+
+function makeTrialBlock(blockNumber){
+  var audioTrialsTimeline = [];
+  blockNum = blockNumber;
+  upperLim = ((blockNum+1)*blockLength);
+  blockStimuli = allStimuli.slice(blockNum*blockLength, upperLim); // Make variable of length Blocklength consisting of relevant trials for this block
+  // console.log(blockStimuli)
+  for (i = 0; i < blockLength-1; i++) {
+    // console.log(i)
+    audioTrialsTimeline.push( {     //add it to design
+      type: 'audio-button-response-mk',
+      stimulus: blockStimuli[i],
+      choices: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18'],
+      button_html: '<button class="myButton">%choice%</button>',
+      margin_vertical: '1%',
+      margin_horizontal: '2%',
+      // prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>',
+      trial_duration: trialDuration,
+      // trial_duration: 100000,
+      response_allowed_while_playing: false,
+      response_ends_trial: true,
+      on_start: function(trial) { // This function changes trialDuration for the remainder of the supposed length. e.g. if trials should last 3 seconds, and someone answers in 1 second, this changes trialDuration for the rest of this trial to 2 seconds.
+        trial.trial_duration = trialDuration; // This has to be done due to how JavaScript works. Else when there is no answer given - it will always be 4000 ms for those trials.
+      },
       on_load: function(data) {
         if (performanceStats.length) {
-
-        if(performanceStats[performanceStats.length-1] == 1){
-          var lastResponse = "Correct";
-        } else {
-          var lastResponse = "Incorrect"
-        };
+          if(performanceStats[performanceStats.length-1] == 1){
+            var lastResponse = "Correct";
+          } else {
+            var lastResponse = "Incorrect"
+          };
         } else {
           var lastResponse = " ";
+          correctCount = [];
+          wrongCount = [];
         };
 
         if(correctCount.length < 1) {
@@ -83,119 +372,217 @@
           wrongCounter = 0;
         }
 
-      // if(correctCount.length > 0) {
-      //   correctCounter = correctCount.length;
-      //   if(correctCounter == 5) {
-      //     trialDuration = trialDuration - 100;
-      //   }
-      // } else {
-      //   correctCounter = 0;
-      // }
-      //
-      // if(wrongCount.length > 0) {
-      //   wrongCounter = wrongCount.length;
-      //   if(wrongCounter == 5) {
-      //     trialDuration = trialDuration + 100;
-      //   }
-      // } else {
-      //   wrongCounter = 0;
-      // }
-
-        document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: ' + lastResponse + '<br>Aantal correct op een rij: ' + correctCounter + '<br>Aantal fout op een rij: ' + wrongCounter + '<br>Snelheid: ' + trialDuration + ' ms';
+        // document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: ' + lastResponse + '<br>Aantal correct op een rij: ' + correctCounter + '<br>Aantal fout op een rij: ' + wrongCounter + '<br>Snelheid: ' + trialDuration + ' ms';
       },
+
       on_finish: function(data) {
-      if(data.button_pressed == data.correct_answer.toString(36)){
-        data.correct = true;
-        var feedbackWord = 'Correct';
-        performanceStats.push(1);
-        wrongCount = [];
-        correctCount.push(1);
-      } else {
-        data.correct = false;
-        var feedbackWord = 'Incorrect';
-        performanceStats.push(0);
-        correctCount = [];
-        wrongCount.push(1);
+        data.ITI = trialDuration;
+        data.block = 1; // Actual experiment
+        tempStr = data.stimulus;
+        var stimNumber = tempStr.substring( // Get the ID of the audio signal that is being played
+          tempStr.lastIndexOf("WAV/") + 4,
+          tempStr.lastIndexOf(".wav")
+        )
+        audioNumbers.push(stimNumber);
+        if (performanceStats.length) {
+          var tempVal = audioNumbers[audioNumbers.length-1];
+          correctAnswers.push(tempVal)
+          data.correct_answer_actual = tempVal;
+          data.value = audioNumbers[audioNumbers.length-1];
+          data.correct_answer = correctAnswers[correctAnswers.length-1]-1;
+        } else {
+          // If first trial
+          data.value = audioNumbers[audioNumbers.length-1];
+          data.correct_answer= audioNumbers[audioNumbers.length-1]-1;
+        }
+
+        if(data.button_pressed == data.correct_answer.toString()){
+          data.correct = true;
+          var feedbackWord = 'Correct';
+          performanceStats.push(1);
+          wrongCount = [];
+          correctCount.push(1);
+        } else {
+          data.correct = false;
+          var feedbackWord = 'Incorrect';
+          performanceStats.push(0);
+          correctCount = [];
+          wrongCount.push(1);
+        }
+        return feedbackWord
       }
-      return feedbackWord;
-    }
     } )
 
     /////// ITI but with showing of choice options and feedback
     audioTrialsTimeline.push( {
-    type: 'audio-button-response',
-    stimulus: 'https://ghepmk01.ugent.be/limesurvey/upload/projects/pasat/AttentionTraining/silent.wav',
-    choices: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18'],
-    // prompt: "<p>What word was said?</p>", // Hier invoegen voor de streak etc? jsPsych.data.get en dan averagen ofzo idk
-    button_html: '<button class="myButton" disabled>%choice%</button>',
-    // button_html: '<button class="myButton">%choice%</button>',
-    data: {value: j, correct_answer: i},
-    margin_vertical: '2%',
-    margin_horizontal: '3%',
-    prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>',
-    trial_duration: trialDuration,
-    trial_ends_after_audio: true,
-    on_load: function(data) {
-      if(performanceStats[performanceStats.length-1] == 1){
-        var lastResponse = "Correct";
-      } else {
-        var lastResponse = "Incorrect"
-      };
-
-      if(correctCount.length > 0) {
-        correctCounter = correctCount.length;
-        if(correctCounter == 5) {
-          trialDuration = trialDuration - 100;
+      type: 'audio-button-response-mk',
+      stimulus: 'https://ghepmk01.ugent.be/limesurvey/upload/projects/pasat/AttentionTraining/WAV/silent.wav',
+      choices: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18'],
+      button_html: '<button class="myButton" disabled>%choice%</button>',
+      // data: {value: j, correct_answer: i},
+      margin_vertical: '1%',
+      margin_horizontal: '2%',
+      // prompt: '<div id="feedbackBlock" style="position:absolute;left:25%;top:10%;width:50%;height:10%;border:1px solid #000;">Empty Block</div>',
+      trial_duration: trialDuration,
+      trial_ends_after_audio: false,
+      on_start: function(trial) { // This function changes trialDuration for the remainder of the supposed length. e.g. if trials should last 3 seconds, and someone answers in 1 second, this changes trialDuration for the rest of this trial to 2 seconds.
+        if (jsPsych.data.getLastTrialData().select('rt').values[0] > 0) {
+          trial.trial_duration = trialDuration - jsPsych.data.getLastTrialData().select('rt').values[0];
+          console.log('Trial Duration is: ', trialDuration)
+          console.log(trial.trial_duration)
+        } else {
+          trial.trial_duration = 0;
+          console.log('Trial Duration (after non-response) is: ', trialDuration)
+          console.log(trial.trial_duration)
         }
-      } else {
-        correctCounter = 0;
-      }
+      },
 
-      if(wrongCount.length > 0) {
-        wrongCounter = wrongCount.length;
-        if(wrongCounter == 5) {
-          trialDuration = trialDuration + 100;
+      on_load: function(data) {
+        if(performanceStats[performanceStats.length-1] == 1){
+          var lastResponse = "Correct";
+        } else {
+          var lastResponse = "Incorrect"
+        };
+
+        if(correctCount.length > 0) {
+          correctCounter = correctCount.length;
+          if(correctCounter == 4) {
+            trialDuration = trialDuration - 100; // Uncomment this if you want to change ITI based on performance
+            console.log('Speed up: ', trialDuration);
+            correctCount = [];
+          }
+        } else {
+          correctCounter = 0;
         }
-      } else {
-        wrongCounter = 0;
-      }
-      document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: ' + lastResponse + '<br>Aantal correct op een rij: ' + correctCounter + '<br>Aantal fout op een rij: ' + wrongCounter + '<br>Snelheid: ' + trialDuration + ' ms';
-    },
-  } )
 
+        if(wrongCount.length > 0) {
+          wrongCounter = wrongCount.length;
+          if(wrongCounter == 4) {
+            trialDuration = trialDuration + 100; // Uncomment this if you want to change ITI based on performance
+            console.log('Speed down: ', trialDuration)
+            wrongCount = [];
+          }
+        } else {
+          wrongCounter = 0;
+        }
+        // document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: ' + lastResponse + '<br>Aantal correct op een rij: ' + correctCounter + '<br>Aantal fout op een rij: ' + wrongCounter + '<br>Snelheid: ' + trialDuration + ' ms';
+      },
+    } )
+  } // End of Trial loop
+  if(b == blockAmount-1){
+    audioTrialsTimeline.push( {
+      type: 'html-keyboard-response',
+      stimulus: 'Dit is het einde van de taak van vandaag.' +
+      '<br> Druk op een toets om uw data op te slaan en af te ronden.',
+      choices: jsPsych.ANY_KEYS,
+    } )
+  } else {
+    audioTrialsTimeline.push( {
+      type: 'html-keyboard-response',
+      stimulus: 'Dit is het einde van dit blok.' +
+      '<br> Neem een korte pauze en druk op een toets om het volgende blok te starten.',
+      choices: jsPsych.ANY_KEYS,
+    } )
+  };
+  audioTrialsTimelineComplete = audioTrialsTimelineComplete.concat(audioTrialsTimeline) // Add to main line
+} // End of make trial block function
 
-//////////////// This is the feedback between trials feedbackBlock
-
-    // audioTrialsTimeline.push({
-    //   type: 'html-keyboard-response',
-    //   choices: jsPsych.NO_KEYS,
-    //   trial_duration: 400,
-    //   data: {test_part: 'feedback'},
-    //   stimulus: function(){
-    //     var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
-    //     if(last_trial_correct){
-    //       return "<p>Correct!</p>";
-    //     } else {
-    //       return "<p>Wrong.</p>"
-    //     }
-    //   }
-    //   });
-
-/////////////////////
-
-}
+var trialDuration = 4000; // Reset trialDuration before starting actual experiment // This is outside of the loop so the trialDuration does not get reset when a new block starts
+for (b = 0; b <= blockAmount-1; b++) { //
+  makeTrialBlock(b)
+};
 
 //////////////// PUSH IT ALL /////////////////
 
-    timeline = timeline.concat(audioTrialsTimeline);
+// timeline.push(openingScreen);
+timeline.push(sessionScreen);
+if (debugging == 0){
+  timeline.push(webcamStart);
+  timeline.push(soundCheck);
+  timeline.push(instructions);
+};
 
-  jsPsych.init({
-    timeline: timeline,
-    preload_audio: allStimuli,
-    // default_iti: 1000,
-    use_webaudio: false,
-    on_finish: function(){jsPsych.data.displayData();}
-  });
+timeline = timeline.concat(practiceTimeline);
 
-  </script>
+timeline = timeline.concat(audioTrialsTimelineComplete);
+
+var webcamStop = {
+  type:'external-html',
+  url: "stopCamera.html",
+  cont_btn: "Volgende",
+  execute_script: true,
+  on_load: function(){
+    var temp = jsPsych.data.get().select('subject').values[0];
+    var IDnumber = temp.substr(0,temp.length -2);
+    var filenameID  = "data_CCT1_ID_"+ jsPsych.data.get().select('subject').values[0] + "_Sesh_" + jsPsych.data.get().select('session').values[0] + "_Date_"+Datum + '_preCAM'; // Filename
+    saveData(filenameID,jsPsych.data.get().csv());
+  }
+};
+
+timeline.push(soundCheck);
+timeline.push(webcamStop)
+
+timeline.push({
+  type: 'fullscreen',
+  fullscreen_mode: false
+});
+
+
+// Participant information
+var d = new Date();
+var Year = d.getFullYear();
+var Month = d.getMonth() + 1;
+var Day = d.getDate();
+var Datum =  Day.toString() + "-" + Month.toString() + "-" + Year.toString();
+
+function saveData(name, data){
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'uploadCSV.php'); // 'write_data.php' is the path to the php file described above.
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  //////
+  xhr.onreadystatechange = function () {
+    // In local files, status is 0 upon success in Mozilla Firefox
+    if(xhr.readyState === XMLHttpRequest.DONE) {
+      var status = xhr.status;
+      if (status === 0 || (status >= 200 && status < 400)) {
+        // The request has been completed successfully
+        console.log(xhr.responseText);
+      } else {
+        // Oh no! There has been an error with the request!
+      }
+    }
+  };
+  ///////
+  xhr.send(JSON.stringify({filename: name, filedata: data}));
+}
+
+jsPsych.init( {
+  timeline: timeline,
+  preload_audio: allStimuli,
+  use_webaudio: false,
+  on_finish: function() {
+    var filenameID  = "data_CCT1_ID_"+ jsPsych.data.get().select('subject').values[0] + "_Sesh_" + jsPsych.data.get().select('session').values[0] + "_Date_"+Datum; // Filename
+    var interactionID  = "interactionData/interactData_CCT1_ID_"+ jsPsych.data.get().select('subject').values[0] +"_Sesh_"+ jsPsych.data.get().select('session').values[0] +"_Date_"+Datum; // Filename
+
+    console.log(filenameID)
+    console.log(interactionID)
+    // console.log(jsPsych.data.get().csv()); // Show data in console
+    jsPsych.data.get().localSave('csv',filenameID); // Save CSV locally (misschien goed idee als backup bij de ECT studie?)
+    saveData(filenameID,jsPsych.data.get().csv());       // Voeg bij naam nog participant ID enzo in, maar moet er een invoer voor bestaan voor het experiment
+
+    // jsPsych.data.displayData('json');
+    var interactionData = jsPsych.data.getInteractionData();
+    saveData(interactionID, interactionData.csv());
+  },
+  on_close: function() {
+    var filenameID  = "data_incomplete_CCT1_ID_"+ jsPsych.data.get().select('subject').values[0] + "_Sesh_" + jsPsych.data.get().select('session').values[0] + "_Date_"+Datum; // Filename
+    saveData(filenameID,jsPsych.data.get().csv());
+    var interactionID  = "interactionData/interactData_CCT1_ID_"+ jsPsych.data.get().select('subject').values[0] +"_Sesh_"+ jsPsych.data.get().select('session').values[0] +"_Date_"+Datum; // Filename
+
+    var interactionData = jsPsych.data.getInteractionData();
+    saveData(interactionID, interactionData.csv());
+  }
+});
+
+</script>
 </html>
