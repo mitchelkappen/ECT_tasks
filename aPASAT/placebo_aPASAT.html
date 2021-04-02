@@ -94,7 +94,7 @@ var instructions = {
     'Bijvoorbeeld: als de eerste twee cijfers 5 hoort, klikt up op het vakje waar "5" staat. ' +
     '<br>Als het volgende cijfer 13 is, dan wordt jouw volgend antwoord "13". Als daarna het volgende cijfer 7 is, dan is "7" het correcte antwoord. ' +
     '<br><br> Je zal telkens een reeks van mogelijke antwoorden op het scherm zien. Je kan antwoorden door op het cijfer te klikken dat correspondeert met het gehoorde cijfer. ',
-    'Dit is een uitdagende taak en zal ongeveer 20 minuten duren. ' +
+    'Dit is een uitdagende taak en zal ongeveer 20-30 minuten duren. ' +
     '<br>Als het je even niet lukt, probeer dan gewoon verder te gaan door naar het volgende cijfer te luisteren en aan te klikken. ' +
     '<br><br>We zullen starten met enkele oefeningen. Tijdens deze oefeningen zal je feedback krijgen over de juistheid van je antwoord. ' +
     'Klik op "volgende" om de taak te starten. '
@@ -211,10 +211,10 @@ function makePracticeTrials(){
 
           if(practiceStats[practiceStats.length-1] == 1){
             var lastPracticeResponse = "Correct";
-            var practiceResponseHTML = 'Laatse antwoord is: <b> <span style="color:green">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
+            var practiceResponseHTML = 'Laatste antwoord is: <b> <span style="color:green">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
           } else {
             var lastPracticeResponse = "Incorrect"
-            var practiceResponseHTML = 'Laatse antwoord is: <b> <span style="color:red">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
+            var practiceResponseHTML = 'Laatste antwoord is: <b> <span style="color:red">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
           };
         } else {
           var lastPracticeResponse = " ";
@@ -311,12 +311,12 @@ function makePracticeTrials(){
       on_load: function(data) {
         if(practiceStats[practiceStats.length-1] == 1){
           var lastPracticeResponse = "Correct";
-          var practiceResponseHTML = 'Laatse antwoord is: <b> <span style="color:green">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
+          var practiceResponseHTML = 'Laatste antwoord is: <b> <span style="color:green">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
         } else {
           var lastPracticeResponse = "Incorrect"
-          var practiceResponseHTML = 'Laatse antwoord is: <b> <span style="color:red">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
+          var practiceResponseHTML = 'Laatste antwoord is: <b> <span style="color:red">' + lastPracticeResponse + '</span> </b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
         };
-        // document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: <b>' + lastPracticeResponse + '</b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
+        // document.getElementById('feedbackBlock').innerHTML = 'Laatste antwoord is: <b>' + lastPracticeResponse + '</b><br>Aantal correct op een rij: ' + correctPracticeCounter + '<br>Aantal fout op een rij: ' + wrongPracticeCounter + '<br>Snelheid: ' + practiceDuration + ' ms';
         document.getElementById('feedbackBlock').innerHTML = practiceResponseHTML;
       },
     } )
@@ -372,7 +372,7 @@ function makeTrialBlock(blockNumber){
           wrongCounter = 0;
         }
 
-        // document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: ' + lastResponse + '<br>Aantal correct op een rij: ' + correctCounter + '<br>Aantal fout op een rij: ' + wrongCounter + '<br>Snelheid: ' + trialDuration + ' ms';
+        // document.getElementById('feedbackBlock').innerHTML = 'Laatste antwoord is: ' + lastResponse + '<br>Aantal correct op een rij: ' + correctCounter + '<br>Aantal fout op een rij: ' + wrongCounter + '<br>Snelheid: ' + trialDuration + ' ms';
       },
 
       on_finish: function(data) {
@@ -465,7 +465,7 @@ function makeTrialBlock(blockNumber){
         } else {
           wrongCounter = 0;
         }
-        // document.getElementById('feedbackBlock').innerHTML = 'Laatse antwoord is: ' + lastResponse + '<br>Aantal correct op een rij: ' + correctCounter + '<br>Aantal fout op een rij: ' + wrongCounter + '<br>Snelheid: ' + trialDuration + ' ms';
+        // document.getElementById('feedbackBlock').innerHTML = 'Laatste antwoord is: ' + lastResponse + '<br>Aantal correct op een rij: ' + correctCounter + '<br>Aantal fout op een rij: ' + wrongCounter + '<br>Snelheid: ' + trialDuration + ' ms';
       },
     } )
   } // End of Trial loop
